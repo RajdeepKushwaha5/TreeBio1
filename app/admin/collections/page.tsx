@@ -60,7 +60,7 @@ export default function CollectionsPage() {
     try {
       await fetchCollections();
       toast.success("Collections refreshed");
-    } catch (error) {
+    } catch {
       toast.error("Failed to refresh data");
     } finally {
       setIsRefreshing(false);

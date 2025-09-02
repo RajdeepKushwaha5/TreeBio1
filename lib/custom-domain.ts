@@ -196,7 +196,7 @@ export class CustomDomainService {
   /**
    * Get domain statistics
    */
-  static async getDomainStats(domainId: string): Promise<{
+  static async getDomainStats(): Promise<{
     totalVisits: number;
     uniqueVisitors: number;
     lastVisit: Date | null;
@@ -247,7 +247,7 @@ export class CustomDomainService {
           method: 'DNS',
           records: this.getDNSRecords(domain, token)
         };
-      } catch (error) {
+      } catch {
         return {
           isVerified: false,
           method: 'DNS',
@@ -255,7 +255,7 @@ export class CustomDomainService {
           records: this.getDNSRecords(domain, token)
         };
       }
-    } catch (error) {
+    } catch {
       return {
         isVerified: false,
         method: 'DNS',
@@ -281,7 +281,7 @@ export class CustomDomainService {
         method: 'FILE',
         errors: isVerified ? undefined : ['Verification file not found or content incorrect']
       };
-    } catch (error) {
+    } catch {
       return {
         isVerified: false,
         method: 'FILE',
@@ -351,7 +351,7 @@ export class CustomDomainService {
         responseTime,
         lastChecked: new Date()
       };
-    } catch (error) {
+    } catch {
       return {
         isAccessible: false,
         sslValid: false,

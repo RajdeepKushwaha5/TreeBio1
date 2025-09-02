@@ -80,7 +80,7 @@ export default function QRCodeGenerator({
           url: url
         });
         toast.success("QR Code shared successfully!");
-      } catch (error) {
+      } catch {
         toast.error("Failed to share QR Code");
       }
     } else {

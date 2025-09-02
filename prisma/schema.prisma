@@ -1,0 +1,168 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String             @id @default(cuid())
+  clerkId       String             @unique
+  firstName     String?
+  lastName      String?
+  imageUrl      String?
+  email         String             @unique
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+  username      String?            @unique
+  bio           String?            @db.VarChar(500)
+  themeId       String?            @default("default")
+  customTheme   Json?
+  customDomain  String?            @unique
+  customDomains CustomDomain[]
+  links         Link[]
+  profileViews  ProfileAnalytics[]
+  socialLinks   SocialLink[]
+  collections   Collection[]
+}
+
+model Link {
+  id              String           @id @default(cuid())
+  title           String
+  url             String
+  clickCount      Int              @default(0)
+  userId          String
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  description     String?          @db.VarChar(500)
+  shortUrl        String?          @unique
+  isActive        Boolean          @default(true)
+  startDate       DateTime?
+  endDate         DateTime?
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  analytics       LinkAnalytics[]
+  collectionLinks CollectionLink[]
+}
+
+model LinkAnalytics {
+  id        String   @id @default(cuid())
+  linkId    String
+  clickedAt DateTime
+  clickerIp String   @db.VarChar(45)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userAgent String?  @db.VarChar(500)
+  referrer  String?  @db.VarChar(500)
+  country   String?  @db.VarChar(100)
+  city      String?  @db.VarChar(100)
+  device    String?  @db.VarChar(100)
+  browser   String?  @db.VarChar(100)
+  link      Link     @relation(fields: [linkId], references: [id])
+
+  @@unique([linkId, clickerIp, clickedAt])
+  @@index([clickedAt, linkId])
+}
+
+model SocialLink {
+  id        String   @id @default(cuid())
+  platform  String
+  url       String
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ProfileAnalytics {
+  id        String   @id @default(cuid())
+  userId    String
+  visitedAt DateTime @default(now())
+  visitorIp String   @db.VarChar(45)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([visitedAt, userId])
+}
+
+model ShortUrl {
+  id          String    @id @default(cuid())
+  shortCode   String    @unique
+  originalUrl String    @db.VarChar(2000)
+  linkId      String?
+  userId      String?
+  clicks      Int       @default(0)
+  isActive    Boolean   @default(true)
+  expiresAt   DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([shortCode])
+  @@index([userId])
+}
+
+model Theme {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  displayName String
+  config      Json
+  isDefault   Boolean  @default(false)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model CustomDomain {
+  id                 String    @id @default(cuid())
+  userId             String
+  domain             String    @unique
+  isActive           Boolean   @default(false)
+  isVerified         Boolean   @default(false)
+  verificationMethod String    @default("DNS")
+  verificationToken  String
+  sslValid           Boolean   @default(false)
+  lastHealthCheck    DateTime?
+  isAccessible       Boolean   @default(false)
+  responseTime       Int?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  user               User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([domain])
+}
+
+model Collection {
+  id              String           @id @default(cuid())
+  name            String
+  description     String?          @db.VarChar(1000)
+  isPublic        Boolean          @default(true)
+  tags            String[]         @default([])
+  customTheme     Json?
+  sortOrder       Int              @default(0)
+  userId          String
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  collectionLinks CollectionLink[]
+
+  @@index([userId])
+  @@index([isPublic])
+}
+
+model CollectionLink {
+  id           String     @id @default(cuid())
+  collectionId String
+  linkId       String
+  sortOrder    Int        @default(0)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  collection   Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  link         Link       @relation(fields: [linkId], references: [id], onDelete: Cascade)
+
+  @@unique([collectionId, linkId])
+  @@index([collectionId])
+  @@index([linkId])
+}

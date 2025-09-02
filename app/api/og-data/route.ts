@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
   try {
     // Validate URL
     new URL(url);
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'Invalid URL' }, { status: 400 });
   }
 

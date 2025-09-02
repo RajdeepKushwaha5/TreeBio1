@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     // Validate URL format
     try {
       new URL(originalUrl);
-    } catch (error) {
+    } catch {
       return NextResponse.json(
         { error: 'Invalid URL format' },
         { status: 400 }
@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const user = await currentUser();
     if (!user) {

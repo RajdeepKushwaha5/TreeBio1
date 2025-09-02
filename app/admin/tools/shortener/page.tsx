@@ -62,8 +62,8 @@ export default function LinkShortenerPage() {
         }));
         setRecentShortUrls(formattedUrls);
       }
-    } catch (error) {
-      console.error('Error fetching short URLs:', error);
+    } catch {
+      console.error('Error fetching short URLs');
     } finally {
       setLoading(false);
     }
@@ -85,7 +85,7 @@ export default function LinkShortenerPage() {
     try {
       await fetchShortUrls();
       toast.success("Short URLs refreshed");
-    } catch (error) {
+    } catch {
       toast.error("Failed to refresh data");
     } finally {
       setIsRefreshing(false);

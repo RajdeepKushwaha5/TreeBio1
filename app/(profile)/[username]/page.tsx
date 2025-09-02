@@ -9,7 +9,7 @@ const Page = async ({ params }: { params: Promise<{ username: string }> }) => {
   const { username } = await params;
   const profileData = await getUserByUsername(username);
 
-  if (profileData?.username !== username) {
+  if (!profileData || profileData.username !== username) {
     return redirect("/")
   }
 
@@ -17,9 +17,33 @@ const Page = async ({ params }: { params: Promise<{ username: string }> }) => {
     console.error("Error logging profile visit:", err);
   });
 
+  // Ensure username is not null before passing to component
+  const safeProfileData = {
+    ...profileData,
+    username: profileData.username || username,
+    bio: profileData.bio || '',
+    firstName: profileData.firstName || '',
+    lastName: profileData.lastName || '',
+    imageUrl: profileData.imageUrl || '',
+    createdAt: profileData.createdAt.toISOString(),
+    updatedAt: profileData.updatedAt.toISOString(),
+    links: profileData.links.map(link => ({
+      ...link,
+      description: link.description === null ? undefined : link.description,
+      createdAt: link.createdAt.toISOString(),
+      updatedAt: link.updatedAt.toISOString(),
+      startDate: link.startDate?.toISOString(),
+      endDate: link.endDate?.toISOString()
+    })),
+    socialLinks: profileData.socialLinks.map(social => ({
+      ...social,
+      createdAt: social.createdAt.toISOString(),
+      updatedAt: social.updatedAt.toISOString()
+    }))
+  };
+
   return (
-    // @ts-expect-error - Legacy component prop types need to be updated
-    <TreeBioProfile profileData={profileData} />
+    <TreeBioProfile profileData={safeProfileData} />
   )
 }
 

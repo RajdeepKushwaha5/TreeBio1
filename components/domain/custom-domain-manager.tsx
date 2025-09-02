@@ -22,17 +22,11 @@ import type { DomainConfig } from "@/lib/custom-domain";
 interface CustomDomainManagerProps {
   domains?: DomainConfig[];
   onAddDomain?: (domain: string) => void;
-  onRemoveDomain?: (domainId: string) => void;
-  onVerifyDomain?: (domainId: string) => void;
-  onToggleDomain?: (domainId: string) => void;
 }
 
 export function CustomDomainManager({
   domains = [],
-  onAddDomain,
-  onRemoveDomain,
-  onVerifyDomain,
-  onToggleDomain
+  onAddDomain
 }: CustomDomainManagerProps) {
   const [newDomain, setNewDomain] = useState("");
   const [isAdding, setIsAdding] = useState(false);

@@ -46,6 +46,14 @@ const Page = async () => {
               ...link,
               description:
                 link.description === null ? undefined : link.description,
+              user: {
+                ...link.user,
+                firstName: link.user.firstName === null ? undefined : link.user.firstName,
+                lastName: link.user.lastName === null ? undefined : link.user.lastName,
+                imageUrl: link.user.imageUrl === null ? undefined : link.user.imageUrl,
+                username: link.user.username === null ? undefined : link.user.username,
+                bio: link.user.bio === null ? undefined : link.user.bio,
+              },
             }))}
           />
         </div>

@@ -3,7 +3,8 @@ import { getUserByUsername } from '@/modules/profile/actions';
 import TreeBioProfile from '@/modules/profile/components/treebio-profile';
 
 import { redirect } from 'next/navigation';
-import React from 'react'
+import React from 'react';
+import { Link, SocialLink } from '@prisma/client';
 
 const Page = async ({ params }: { params: Promise<{ username: string }> }) => {
   const { username } = await params;
@@ -27,7 +28,7 @@ const Page = async ({ params }: { params: Promise<{ username: string }> }) => {
     imageUrl: profileData.imageUrl || '',
     createdAt: profileData.createdAt.toISOString(),
     updatedAt: profileData.updatedAt.toISOString(),
-    links: profileData.links.map(link => ({
+    links: profileData.links.map((link: Link) => ({
       ...link,
       description: link.description === null ? undefined : link.description,
       createdAt: link.createdAt.toISOString(),
@@ -35,7 +36,7 @@ const Page = async ({ params }: { params: Promise<{ username: string }> }) => {
       startDate: link.startDate?.toISOString(),
       endDate: link.endDate?.toISOString()
     })),
-    socialLinks: profileData.socialLinks.map(social => ({
+    socialLinks: profileData.socialLinks.map((social: SocialLink) => ({
       ...social,
       createdAt: social.createdAt.toISOString(),
       updatedAt: social.updatedAt.toISOString()

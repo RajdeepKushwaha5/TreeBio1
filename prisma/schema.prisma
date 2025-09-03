@@ -21,6 +21,16 @@ model User {
   themeId       String?            @default("default")
   customTheme   Json?
   customDomain  String?            @unique
+  avatar        String?            // Enhanced avatar support
+  displayName   String?            // Professional display name
+  title         String?            // Professional title/tagline
+  location      String?            // Location information
+  website       String?            // Personal website
+  isPublic      Boolean            @default(true)
+  isVerified    Boolean            @default(false)
+  lastActive    DateTime           @default(now())
+  profileViewCount  Int            @default(0) // Cached view count
+  linkClicks    Int                @default(0) // Cached total clicks
   customDomains CustomDomain[]
   links         Link[]
   profileViews  ProfileAnalytics[]
@@ -39,11 +49,19 @@ model Link {
   description     String?          @db.VarChar(500)
   shortUrl        String?          @unique
   isActive        Boolean          @default(true)
+  isVisible       Boolean          @default(true) // For showing/hiding links
+  sortOrder       Int              @default(0)    // For drag & drop reordering
   startDate       DateTime?
   endDate         DateTime?
+  thumbnail       String?          // Link preview thumbnail
+  favicon         String?          // Website favicon
+  lastClickAt     DateTime?        // Last time clicked
   user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   analytics       LinkAnalytics[]
   collectionLinks CollectionLink[]
+
+  @@index([userId, sortOrder])
+  @@index([userId, isActive, isVisible])
 }
 
 model LinkAnalytics {
@@ -69,10 +87,16 @@ model SocialLink {
   id        String   @id @default(cuid())
   platform  String
   url       String
+  username  String?  // Platform username
+  isVisible Boolean  @default(true)
+  sortOrder Int      @default(0)
   userId    String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, sortOrder])
+  @@unique([userId, platform]) // One platform per user
 }
 
 model ProfileAnalytics {

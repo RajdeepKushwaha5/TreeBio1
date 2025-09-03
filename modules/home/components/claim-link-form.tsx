@@ -70,7 +70,7 @@ const ClaimLinkForm = () => {
     : "treebio.com";
 
   return (
-    <div className="space-y-8 max-w-md mx-auto w-full">
+    <div className="space-y-8 max-w-md mx-auto w-full px-4 sm:px-0">
       {/* Form */}
       <form
         className="space-y-6 flex flex-col items-center"
@@ -78,8 +78,8 @@ const ClaimLinkForm = () => {
       >
         <div className="w-full">
           <div className="flex items-center border border-neutral-200 dark:border-neutral-700 rounded-lg overflow-hidden transition-all bg-white dark:bg-neutral-900">
-            <div className="flex items-center px-4 py-3 bg-neutral-50 dark:bg-neutral-800 border-r border-neutral-200 dark:border-neutral-700">
-              <span className="text-sm text-neutral-600 dark:text-neutral-300 font-medium">
+            <div className="flex items-center px-2 sm:px-4 py-3 bg-neutral-50 dark:bg-neutral-800 border-r border-neutral-200 dark:border-neutral-700">
+              <span className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-300 font-medium whitespace-nowrap">
                 {displayOrigin}/
               </span>
             </div>
@@ -94,7 +94,7 @@ const ClaimLinkForm = () => {
                   )
                 }
                 maxLength={30}
-                className="text-semibold h-12 px-3 border-0 shadow-none focus:ring-0 focus:outline-none bg-transparent text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500"
+                className="text-semibold h-12 px-2 sm:px-3 border-0 shadow-none focus:ring-0 focus:outline-none bg-transparent text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500 text-sm sm:text-base"
               />
               {linkValue && (
                 <div className="absolute right-3 top-1/2 -translate-y-1/2">

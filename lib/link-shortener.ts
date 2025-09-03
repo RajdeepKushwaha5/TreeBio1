@@ -1,6 +1,7 @@
 import { nanoid } from 'nanoid';
 import { db } from '@/lib/db';
 import { validateUrl, sanitizeUrl } from '@/lib/url-validator';
+import type { LinkAnalytics, ShortUrl } from '@prisma/client';
 
 export interface CreateShortUrlParams {
   originalUrl: string;
@@ -67,7 +68,9 @@ class LinkShortenerService {
           where: { shortCode }
         });
 
-        if (!existing) break;
+        if (!existing) {
+          break;
+        }
 
         if (customCode) {
           throw new Error('Custom code already exists');
@@ -165,7 +168,9 @@ class LinkShortenerService {
         where: { shortCode }
       });
 
-      if (!shortUrl || !shortUrl.linkId) return null;
+      if (!shortUrl || !shortUrl.linkId) {
+        return null;
+      }
 
       // Get analytics from LinkAnalytics table
       const analytics = await db.linkAnalytics.findMany({
@@ -175,12 +180,12 @@ class LinkShortenerService {
       });
 
       // Calculate unique clicks (by IP)
-      const uniqueIps = new Set(analytics.map(a => a.clickerIp));
+      const uniqueIps = new Set(analytics.map((a: LinkAnalytics) => a.clickerIp));
       const uniqueClicks = uniqueIps.size;
 
       // Top countries
       const countryCount: Record<string, number> = {};
-      analytics.forEach(a => {
+      analytics.forEach((a: LinkAnalytics) => {
         if (a.country) {
           countryCount[a.country] = (countryCount[a.country] || 0) + 1;
         }
@@ -193,7 +198,7 @@ class LinkShortenerService {
 
       // Top devices
       const deviceCount: Record<string, number> = {};
-      analytics.forEach(a => {
+      analytics.forEach((a: LinkAnalytics) => {
         if (a.device) {
           deviceCount[a.device] = (deviceCount[a.device] || 0) + 1;
         }
@@ -210,8 +215,8 @@ class LinkShortenerService {
       thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
       analytics
-        .filter(a => a.clickedAt >= thirtyDaysAgo)
-        .forEach(a => {
+        .filter((a: LinkAnalytics) => a.clickedAt >= thirtyDaysAgo)
+        .forEach((a: LinkAnalytics) => {
           const date = a.clickedAt.toISOString().split('T')[0];
           dateCount[date] = (dateCount[date] || 0) + 1;
         });
@@ -244,7 +249,7 @@ class LinkShortenerService {
         take: 100
       });
 
-      return shortUrls.map(url => ({
+      return shortUrls.map((url: ShortUrl) => ({
         id: url.id,
         shortCode: url.shortCode,
         shortUrl: `${this.baseUrl}/s/${url.shortCode}`,

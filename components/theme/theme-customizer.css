@@ -1,0 +1,32 @@
+/* Theme Customizer Styles */
+
+.theme-color-swatch {
+  background-color: var(--swatch-color);
+}
+
+.theme-primary-swatch {
+  background-color: var(--primary-color);
+}
+
+.theme-accent-swatch {
+  background-color: var(--accent-color);
+}
+
+.theme-preview-avatar {
+  background: linear-gradient(135deg, var(--primary), var(--primary));
+}
+
+.theme-preview-primary-btn {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.theme-preview-accent-btn {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.theme-preview-accent-btn:hover {
+  background: var(--accent);
+  color: var(--accent-foreground);
+}

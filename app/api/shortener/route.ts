@@ -6,8 +6,44 @@ export async function POST(request: NextRequest) {
   try {
     const user = await currentUser();
     const body = await request.json();
-    const { originalUrl, customCode, expiresAt, linkId } = body;
+    const { originalUrl, customCode, expiresAt, linkId, urls } = body;
 
+    // Handle bulk URL creation
+    if (urls && Array.isArray(urls)) {
+      const results = [];
+      const errors = [];
+
+      for (const url of urls) {
+        try {
+          // Validate URL format
+          new URL(url);
+          
+          const result = await linkShortener.createShortUrl({
+            originalUrl: url,
+            expiresAt: expiresAt ? new Date(expiresAt) : undefined,
+            userId: user?.id
+          });
+
+          if (result.success) {
+            results.push(result);
+          } else {
+            errors.push({ url, error: result.error });
+          }
+        } catch {
+          errors.push({ url, error: 'Invalid URL format' });
+        }
+      }
+
+      return NextResponse.json({
+        success: true,
+        results,
+        errors,
+        processed: results.length,
+        failed: errors.length
+      });
+    }
+
+    // Handle single URL creation
     if (!originalUrl) {
       return NextResponse.json(
         { error: 'Original URL is required' },

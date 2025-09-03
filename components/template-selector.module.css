@@ -1,0 +1,108 @@
+/* Template Selector Improved Styles */
+.templatePreview {
+  height: 10rem;
+  position: relative;
+  overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .templatePreview {
+    height: 11rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .templatePreview {
+    height: 12rem;
+  }
+}
+
+.avatarPreview {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 9999px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (min-width: 768px) {
+  .avatarPreview {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+}
+
+.linePreview {
+  height: 0.5rem;
+  border-radius: 9999px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.buttonPreview {
+  height: 0.75rem;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 2px;
+}
+
+/* Responsive grid adjustments */
+@media (max-width: 639px) {
+  .templatePreview {
+    padding: 1rem;
+  }
+}
+
+/* Enhanced line clamp utilities */
+.line-clamp-1 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+
+.line-clamp-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+/* Card layout improvements */
+.templateCard {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 480px;
+}
+
+@media (min-width: 768px) {
+  .templateCard {
+    min-height: 520px;
+  }
+}
+
+/* Ensure proper scrolling in modal context */
+.templateGrid {
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--primary)) transparent;
+}
+
+.templateGrid::-webkit-scrollbar {
+  width: 6px;
+}
+
+.templateGrid::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.templateGrid::-webkit-scrollbar-thumb {
+  background-color: hsl(var(--primary));
+  border-radius: 3px;
+}
+
+.templateGrid::-webkit-scrollbar-thumb:hover {
+  background-color: hsl(var(--primary) / 0.8);
+}

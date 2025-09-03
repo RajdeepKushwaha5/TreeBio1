@@ -333,44 +333,46 @@ const LinkForm = ({ username, bio, link, socialLinks: initialSocialLinks = [] }:
   ];
 
   return (
-    <div className="w-full max-w-2xl mx-auto space-y-6">
+    <div className="w-full max-w-2xl mx-auto space-y-6 px-4 sm:px-0">
       {/* Profile Section */}
       <Card className="border-2 border-dashed border-gray-200 hover:border-green-400 transition-colors">
-        <CardContent className="p-6">
-          <div className="flex items-center gap-4">
+        <CardContent className="p-4 sm:p-6">
+          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
             <div className="relative group">
-              <Avatar className="h-20 w-20 border-4 border-white shadow-lg">
+              <Avatar className="h-16 w-16 sm:h-20 sm:w-20 border-4 border-white shadow-lg">
                 <AvatarImage
                   src={profile.imageUrl || "/placeholder.svg"}
                   alt={profile.username}
                 />
-                <AvatarFallback className="text-lg font-semibold bg-gray-100 text-gray-600">
+                <AvatarFallback className="text-sm sm:text-lg font-semibold bg-gray-100 text-gray-600">
                   {profile.username.slice(0, 2).toUpperCase() || "UN"}
                 </AvatarFallback>
               </Avatar>
               <Button
                 size="sm"
                 variant="secondary"
-                className="absolute -bottom-2 -right-2 h-8 w-8 rounded-full p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                className="absolute -bottom-1 -right-1 sm:-bottom-2 sm:-right-2 h-6 w-6 sm:h-8 sm:w-8 rounded-full p-0 opacity-0 group-hover:opacity-100 transition-opacity"
               >
-                <Camera size={14} />
+                <Camera size={12} className="sm:size-[14px]" />
               </Button>
             </div>
 
-            <div className="flex-1 space-y-2">
+            <div className="flex-1 w-full sm:w-auto space-y-2">
               {editingProfile ? (
                 <form
                   onSubmit={profileForm.handleSubmit(onProfileSubmit)}
                   className="space-y-2"
                 >
-                  <div className="flex gap-2">
+                  <div className="flex flex-col sm:flex-row gap-2">
                     <Input
                       {...profileForm.register("firstName")}
                       placeholder="First Name"
+                      className="flex-1"
                     />
                     <Input
                       {...profileForm.register("lastName")}
                       placeholder="Last Name"
+                      className="flex-1"
                     />
                   </div>
                   <div>
@@ -452,7 +454,7 @@ const LinkForm = ({ username, bio, link, socialLinks: initialSocialLinks = [] }:
                     variant="outline"
                     size="sm"
                     className="h-9 w-9 p-0 bg-transparent"
-                    onClick={() => window.open(socialLink.url, '_blank')}
+                    onClick={() => typeof window !== 'undefined' && window.open(socialLink.url, '_blank')}
                   >
                     <Icon size={16} />
                   </Button>
@@ -485,7 +487,7 @@ const LinkForm = ({ username, bio, link, socialLinks: initialSocialLinks = [] }:
 
       {/* Links Section */}
       <div className="space-y-3">
-        {links.map((link, index) => (
+        {links.map((link) => (
           <LinkCard
             key={link.id}
             link={link}

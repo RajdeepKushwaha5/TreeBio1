@@ -192,6 +192,9 @@ export default function SettingsPage() {
     }
   };
 
+  // Specific handlers for security toggles
+  const handleTwoFactorToggle = () => handleSecurityToggle("twoFactorEnabled");
+
   // Notification settings handler
   const handleNotificationToggle = async (key: keyof NotificationSettings) => {
     if (!settings) return;
@@ -214,6 +217,10 @@ export default function SettingsPage() {
     }
   };
 
+  // Specific handlers for notification toggles
+  const handleEmailNotificationToggle = () => handleNotificationToggle("emailNotifications");
+  const handleMarketingEmailToggle = () => handleNotificationToggle("marketingEmails");
+
   // Privacy settings handler
   const handlePrivacyToggle = async (key: keyof PrivacySettings) => {
     if (!settings) return;
@@ -235,6 +242,11 @@ export default function SettingsPage() {
       setUpdating("");
     }
   };
+
+  // Specific handlers for privacy toggles
+  const handleProfileVisibilityToggle = () => handlePrivacyToggle("profileVisibility");
+  const handleAnalyticsTrackingToggle = () => handlePrivacyToggle("analyticsTracking");
+  const handleDataCollectionToggle = () => handlePrivacyToggle("dataCollection");
 
   const handleDeleteAccount = async () => {
     setUpdating("delete");
@@ -288,39 +300,65 @@ export default function SettingsPage() {
         </div>
       </div>
 
-      <div className="container mx-auto px-6 py-6">
-        <div className="flex gap-8">
+      <div className="container mx-auto px-4 sm:px-6 py-6">
+        <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
           {/* Sidebar Navigation */}
-          <div className="w-80 space-y-2">
-            {sidebarItems.map((item) => {
-              const Icon = item.icon;
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => setActiveTab(item.id)}
-                  className={cn(
-                    "w-full flex items-center gap-3 px-4 py-3 text-left rounded-lg transition-colors",
-                    "hover:bg-muted/50",
-                    activeTab === item.id
-                      ? "bg-primary/10 text-primary border border-primary/20"
-                      : "text-muted-foreground"
-                  )}
-                >
-                  <div className={cn(
-                    "p-2 rounded-lg",
-                    activeTab === item.id
-                      ? "bg-primary/20"
-                      : "bg-muted"
-                  )}>
+          <div className="w-full lg:w-80 space-y-2">
+            {/* Mobile: Horizontal scrolling tabs */}
+            <div className="flex lg:hidden overflow-x-auto space-x-2 pb-2">
+              {sidebarItems.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => setActiveTab(item.id)}
+                    className={cn(
+                      "flex items-center gap-2 px-4 py-2 rounded-lg transition-colors whitespace-nowrap min-w-fit",
+                      "hover:bg-muted/50",
+                      activeTab === item.id
+                        ? "bg-primary/10 text-primary border border-primary/20"
+                        : "text-muted-foreground bg-muted/20"
+                    )}
+                  >
                     <Icon className="h-4 w-4" />
-                  </div>
-                  <div>
-                    <div className="font-medium">{item.label}</div>
-                    <div className="text-sm text-muted-foreground">{item.description}</div>
-                  </div>
-                </button>
-              );
-            })}
+                    <span className="text-sm font-medium">{item.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+            
+            {/* Desktop: Vertical sidebar */}
+            <div className="hidden lg:block space-y-2">
+              {sidebarItems.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => setActiveTab(item.id)}
+                    className={cn(
+                      "w-full flex items-center gap-3 px-4 py-3 text-left rounded-lg transition-colors",
+                      "hover:bg-muted/50",
+                      activeTab === item.id
+                        ? "bg-primary/10 text-primary border border-primary/20"
+                        : "text-muted-foreground"
+                    )}
+                  >
+                    <div className={cn(
+                      "p-2 rounded-lg",
+                      activeTab === item.id
+                        ? "bg-primary/20"
+                        : "bg-muted"
+                    )}>
+                      <Icon className="h-4 w-4" />
+                    </div>
+                    <div>
+                      <div className="font-medium">{item.label}</div>
+                      <div className="text-sm text-muted-foreground">{item.description}</div>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           {/* Main Content Area */}
@@ -335,7 +373,7 @@ export default function SettingsPage() {
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="firstName">First Name</Label>
                       <Input
@@ -486,7 +524,7 @@ export default function SettingsPage() {
                       </div>
                       <Switch
                         checked={settings.security.twoFactorEnabled}
-                        onCheckedChange={() => handleSecurityToggle("twoFactorEnabled")}
+                        onCheckedChange={handleTwoFactorToggle}
                         disabled={updating === "security"}
                       />
                     </div>
@@ -581,7 +619,7 @@ export default function SettingsPage() {
                     </div>
                     <Switch
                       checked={settings.notifications.emailNotifications}
-                      onCheckedChange={() => handleNotificationToggle("emailNotifications")}
+                      onCheckedChange={handleEmailNotificationToggle}
                       disabled={updating === "notifications"}
                     />
                   </div>
@@ -595,7 +633,7 @@ export default function SettingsPage() {
                     </div>
                     <Switch
                       checked={settings.notifications.marketingEmails}
-                      onCheckedChange={() => handleNotificationToggle("marketingEmails")}
+                      onCheckedChange={handleMarketingEmailToggle}
                       disabled={updating === "notifications"}
                     />
                   </div>
@@ -626,7 +664,7 @@ export default function SettingsPage() {
                       </div>
                       <Switch
                         checked={settings.privacy.profileVisibility}
-                        onCheckedChange={() => handlePrivacyToggle("profileVisibility")}
+                        onCheckedChange={handleProfileVisibilityToggle}
                         disabled={updating === "privacy"}
                       />
                     </div>
@@ -640,7 +678,7 @@ export default function SettingsPage() {
                       </div>
                       <Switch
                         checked={settings.privacy.analyticsTracking}
-                        onCheckedChange={() => handlePrivacyToggle("analyticsTracking")}
+                        onCheckedChange={handleAnalyticsTrackingToggle}
                         disabled={updating === "privacy"}
                       />
                     </div>
@@ -654,7 +692,7 @@ export default function SettingsPage() {
                       </div>
                       <Switch
                         checked={settings.privacy.dataCollection}
-                        onCheckedChange={() => handlePrivacyToggle("dataCollection")}
+                        onCheckedChange={handleDataCollectionToggle}
                         disabled={updating === "privacy"}
                       />
                     </div>

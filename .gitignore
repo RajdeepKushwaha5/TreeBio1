@@ -41,3 +41,93 @@ yarn-error.log*
 next-env.d.ts
 
 /lib/generated/prisma
+
+# Custom additions - Development & Testing Files
+# Log files
+*.log
+build-output*.log
+database-build-test.log
+
+# Backup files
+*.backup
+
+# Test and debug scripts
+add-rajjo-user.js
+advanced-features-test-report.js
+check-db.js
+comprehensive-feature-test.js
+comprehensive-route-test.js
+deployment-check.js
+deployment-readiness-check.js
+enhanced-features-test.js
+generate-prisma.js
+hydration-test.js
+local-diagnostic.js
+manual-testing-helper.js
+platform-icon-test-results.js
+qa-testing-basic.js
+qa-testing-script.js
+qr-code-test.js
+qr-monitor.js
+quick-db-check.js
+quick-deployment-test.js
+quick-route-test.js
+shortener-status.js
+simple-qr-test.js
+temp-auth-bypass.js
+test-*.js
+theme-customizer-test.js
+validate-*.js
+vercel-deployment-readiness.js
+
+# Build and deployment scripts
+*.bat
+*.sh
+*.ps1
+generate-prisma.ps1
+install-realtime.bat
+install-realtime.sh
+run-prisma-generate.bat
+
+# HTML test files
+buttons-test-report.html
+responsive-test.html
+
+# Documentation and report files (optional - uncomment to exclude)
+# ADVANCED-FEATURES-COMPLETE-REPORT.md
+# COMPLETE-VERCEL-DEPLOYMENT-GUIDE.md
+# COMPREHENSIVE-ERROR-ANALYSIS-REPORT.md
+# COMPREHENSIVE-QA-REPORT.md
+# CONTENT-EDITOR-IMPLEMENTATION.md
+# database-migration-guide.md
+# DATABASE-STATUS-REPORT.md
+# database-validation-report.md
+# deployment-readiness-final-report.md
+# DEPLOYMENT-ENVIRONMENT-VARIABLES.md
+# DEPLOYMENT-RISK-ASSESSMENT.md
+# DEPLOYMENT-SUCCESS-REPORT.md
+# ENHANCED-FEATURES-COMPLETE-REPORT.md
+# FINAL-IMPLEMENTATION-COMPLETE.md
+# FINAL-QA-STATUS-REPORT.md
+# git-setup-summary.md
+# local-development-*.md
+# PROFESSIONAL-REALTIME-COMPLETE.md
+# QR-CODE-FIX-REPORT.md
+# QR-Code-Monitoring-Report.md
+# QR-MODAL-RESPONSIVE-FIX-REPORT.md
+# QR-MODAL-SYSTEMATIC-FIX-REPORT.md
+# QUALITY-SCORE-100-ACHIEVEMENT-REPORT.md
+# QUALITY-SCORE-ANALYSIS.md
+# REALTIME-IMPLEMENTATION-GUIDE.md
+# RESPONSIVE-DESIGN-REPORT.md
+# RESPONSIVE-MODAL-STATUS-FINAL.md
+# SHARE-FEATURES-COMPLETE-REPORT.md
+# TEMPLATE-SELECTION-RESPONSIVE-FIX-COMPLETE.md
+# TEMPLATE-SYSTEM-DOCUMENTATION.md
+# THEME-CUSTOMIZER-FIX-COMPLETE.md
+# URL-SHORTENER-SUCCESS-REPORT.md
+# vercel-build-troubleshooting.md
+# vercel-cli-instructions.md
+# VERCEL-DEPLOYMENT-READINESS-REPORT.md
+# VERCEL-DEPLOYMENT-TROUBLESHOOTING.md
+# VERCEL_ENV_VARS.md

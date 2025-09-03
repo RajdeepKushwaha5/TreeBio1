@@ -1,0 +1,130 @@
+/* Template Preview Styles - Using Global CSS Custom Properties */
+/* Dynamic theme variables are set via JavaScript for optimal performance */
+
+.template-preview-wrapper {
+  width: 100%;
+}
+
+.template-preview-wrapper .template-preview-container {
+  background-color: var(--current-template-bg, #ffffff);
+  color: var(--current-template-text, #000000);
+  font-family: var(--current-template-font-family, system-ui);
+}
+
+.template-preview-wrapper .template-card {
+  background-color: var(--current-template-card-bg, #ffffff);
+  border-radius: var(--current-template-border-radius, 8px);
+}
+
+.template-preview-wrapper .template-name {
+  color: var(--current-template-text, #000000);
+  font-weight: var(--current-template-heading-weight, 600);
+}
+
+.template-preview-wrapper .template-bio {
+  color: var(--current-template-text, #000000);
+  opacity: 0.8;
+  font-weight: var(--current-template-body-weight, 400);
+}
+
+.template-preview-wrapper .template-button {
+  background-color: var(--current-template-button, #0066cc);
+  color: var(--current-template-button-text, #ffffff);
+  border-color: var(--current-template-accent, #0066cc);
+  border-radius: var(--current-template-border-radius, 8px);
+}
+
+.template-preview-wrapper .template-button:hover {
+  transform: scale(1.02);
+  opacity: 0.9;
+}
+
+.template-preview-wrapper .template-button-title {
+  color: inherit;
+}
+
+.template-preview-wrapper .template-button-description {
+  color: inherit;
+  opacity: 0.8;
+}
+
+.template-preview-wrapper .template-avatar-fallback {
+  background-color: var(--current-template-accent, #0066cc);
+  color: var(--current-template-button-text, #ffffff);
+}
+
+.template-preview-wrapper .template-social-border {
+  border-color: var(--current-template-accent, #0066cc);
+  opacity: 0.2;
+}
+
+.template-preview-wrapper .template-social-icon {
+  color: var(--current-template-accent, #0066cc);
+}
+
+.template-preview-wrapper .template-social-icon:hover {
+  background-color: var(--current-template-accent, #0066cc);
+  color: var(--current-template-button-text, #ffffff);
+}
+
+.template-button-title {
+  color: inherit;
+}
+
+.template-button-description {
+  color: inherit;
+  opacity: 0.8;
+}
+
+.template-social-border {
+  border-top: 1px solid;
+  border-color: var(--template-text);
+  opacity: 0.2;
+}
+
+.template-social-icon {
+  color: var(--template-accent);
+}
+
+.template-avatar-fallback {
+  background-color: var(--template-accent);
+  color: var(--template-button-text);
+}
+
+/* Background patterns */
+.template-bg-dots {
+  background-image: radial-gradient(circle, var(--template-accent) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.template-bg-gradient {
+  background: linear-gradient(135deg, var(--template-primary) 0%, var(--template-accent) 100%);
+}
+
+/* Font size variants */
+.template-name-small { font-size: 1.25rem; }
+.template-name-medium { font-size: 1.5rem; }
+.template-name-large { font-size: 1.75rem; }
+
+.template-bio-small { font-size: 0.875rem; }
+.template-bio-medium { font-size: 1rem; }
+.template-bio-large { font-size: 1.125rem; }
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .template-preview-container {
+    padding: 1rem;
+  }
+  
+  .template-button {
+    font-size: 0.875rem;
+  }
+  
+  .template-name {
+    font-size: 1.25rem !important;
+  }
+  
+  .template-bio {
+    font-size: 0.875rem !important;
+  }
+}

@@ -1,0 +1,282 @@
+/* Template System CSS Variables and Classes */
+
+:root {
+  /* Default template variables - can be overridden by template system */
+  --template-primary: #3b82f6;
+  --template-accent: #10b981;
+  --template-bg: #ffffff;
+  --template-text: #1f2937;
+  --template-card-bg: #f9fafb;
+  --template-button: #3b82f6;
+  --template-button-text: #ffffff;
+  --template-border-radius: 0.5rem;
+  --template-font-family: system-ui, -apple-system, sans-serif;
+  --template-font-size: medium;
+  --template-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* Template-aware component classes */
+.template-container {
+  background-color: var(--template-bg);
+  color: var(--template-text);
+  font-family: var(--template-font-family);
+  transition: all 0.3s ease;
+}
+
+.template-card {
+  background-color: var(--template-card-bg);
+  border-radius: var(--template-border-radius);
+  box-shadow: var(--template-shadow);
+  transition: all 0.3s ease;
+}
+
+.template-button {
+  background-color: var(--template-button);
+  color: var(--template-button-text);
+  border-radius: var(--template-border-radius);
+  transition: all 0.2s ease;
+  font-family: var(--template-font-family);
+}
+
+.template-button:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.template-text-primary {
+  color: var(--template-primary);
+}
+
+.template-text-accent {
+  color: var(--template-accent);
+}
+
+.template-bg-primary {
+  background-color: var(--template-primary);
+}
+
+.template-bg-accent {
+  background-color: var(--template-accent);
+}
+
+.template-border-primary {
+  border-color: var(--template-primary);
+}
+
+.template-border-accent {
+  border-color: var(--template-accent);
+}
+
+/* Responsive template utilities */
+.template-responsive {
+  @apply w-full max-w-md mx-auto;
+}
+
+@media (min-width: 768px) {
+  .template-responsive {
+    @apply max-w-lg;
+  }
+}
+
+@media (min-width: 1024px) {
+  .template-responsive {
+    @apply max-w-xl;
+  }
+}
+
+/* Template layout classes */
+.template-layout-vertical {
+  @apply flex flex-col space-y-6;
+}
+
+.template-layout-grid {
+  @apply grid grid-cols-1 sm:grid-cols-2 gap-4;
+}
+
+.template-layout-card {
+  @apply space-y-4;
+}
+
+/* Template spacing classes */
+.template-spacing-compact > * + * {
+  @apply mt-2;
+}
+
+.template-spacing-normal > * + * {
+  @apply mt-4;
+}
+
+.template-spacing-spacious > * + * {
+  @apply mt-8;
+}
+
+/* Template button style classes */
+.template-button-pill {
+  @apply rounded-full;
+}
+
+.template-button-rounded {
+  border-radius: var(--template-border-radius);
+}
+
+.template-button-sharp {
+  @apply rounded-none;
+}
+
+.template-button-gradient {
+  background: linear-gradient(135deg, var(--template-primary), var(--template-accent));
+}
+
+/* Template avatar styles */
+.template-avatar-circle {
+  @apply rounded-full;
+}
+
+.template-avatar-rounded {
+  border-radius: var(--template-border-radius);
+}
+
+.template-avatar-square {
+  @apply rounded-none;
+}
+
+.template-avatar-small {
+  @apply w-16 h-16;
+}
+
+.template-avatar-medium {
+  @apply w-20 h-20;
+}
+
+.template-avatar-large {
+  @apply w-24 h-24;
+}
+
+/* Template shadow styles */
+.template-shadow-none {
+  box-shadow: none;
+}
+
+.template-shadow-soft {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+.template-shadow-medium {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.template-shadow-strong {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Template background patterns */
+.template-bg-dots {
+  background-image: radial-gradient(circle, var(--template-accent) 1px, transparent 1px);
+  background-size: 20px 20px;
+  opacity: 0.1;
+}
+
+.template-bg-waves {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000' fill-opacity='0.1'%3E%3Cpath d='m36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  opacity: 0.05;
+}
+
+.template-bg-gradient-primary {
+  background: linear-gradient(135deg, var(--template-primary), var(--template-accent));
+  opacity: 0.1;
+}
+
+/* Template social icon styles */
+.template-social-filled {
+  background-color: var(--template-accent);
+  color: var(--template-button-text);
+}
+
+.template-social-outlined {
+  border: 1px solid var(--template-accent);
+  color: var(--template-accent);
+  background-color: transparent;
+}
+
+.template-social-minimal {
+  color: var(--template-accent);
+  background-color: transparent;
+}
+
+.template-social-small {
+  @apply w-8 h-8 p-1.5;
+}
+
+.template-social-medium {
+  @apply w-10 h-10 p-2;
+}
+
+.template-social-large {
+  @apply w-12 h-12 p-2.5;
+}
+
+/* Template typography */
+.template-heading {
+  font-family: var(--template-font-family);
+  color: var(--template-text);
+  font-weight: 600;
+}
+
+.template-body {
+  font-family: var(--template-font-family);
+  color: var(--template-text);
+  font-weight: 400;
+}
+
+.template-font-small {
+  @apply text-sm;
+}
+
+.template-font-medium {
+  @apply text-base;
+}
+
+.template-font-large {
+  @apply text-lg;
+}
+
+/* Dark mode template support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --template-bg: #0f172a;
+    --template-text: #e2e8f0;
+    --template-card-bg: #1e293b;
+  }
+}
+
+/* Template transitions and animations */
+.template-transition {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.template-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--template-shadow);
+}
+
+.template-scale:hover {
+  transform: scale(1.02);
+}
+
+/* Template preview specific styles */
+.template-preview-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.template-preview-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Custom template specific styles that can be injected dynamically */
+.template-custom-styles {
+  /* Placeholder for dynamic custom CSS injection */
+}

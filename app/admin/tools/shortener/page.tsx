@@ -49,6 +49,12 @@ export default function LinkShortenerPage() {
   const [recentShortUrls, setRecentShortUrls] = useState<ShortUrl[]>([]);
   const [loading, setLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [hostUrl, setHostUrl] = useState("yourdomain.com");
+
+  // Set host URL on client side to avoid hydration errors
+  useEffect(() => {
+    setHostUrl(window.location.host);
+  }, []);
 
   // Fetch existing short URLs on component mount
   const fetchShortUrls = async () => {
@@ -93,7 +99,9 @@ export default function LinkShortenerPage() {
   };
 
   const handleGenerate = async () => {
-    if (!originalUrl) return;
+    if (!originalUrl) {
+      return;
+    }
     
     setIsGenerating(true);
     try {
@@ -110,7 +118,6 @@ export default function LinkShortenerPage() {
 
       if (response.ok) {
         const result = await response.json();
-        console.log('API response:', result);
         
         if (result.success) {
           const newShortUrl: ShortUrl = {
@@ -207,7 +214,7 @@ export default function LinkShortenerPage() {
                 <div className="flex gap-2">
                   <div className="flex items-center bg-muted px-3 py-2 rounded-l-md border border-r-0">
                     <span className="text-sm text-muted-foreground">
-                      {typeof window !== 'undefined' ? `${window.location.host}/s/` : 'yourdomain.com/s/'}
+                      {hostUrl}/s/
                     </span>
                   </div>
                   <Input
@@ -403,7 +410,7 @@ export default function LinkShortenerPage() {
                       <div className="flex-1 min-w-0">
                         <p className="font-medium truncate">{new URL(url.originalUrl).hostname}</p>
                         <p className="text-xs text-muted-foreground">
-                          {typeof window !== 'undefined' ? `${window.location.host}/s/` : 'yourdomain.com/s/'}{url.shortCode}
+                          {hostUrl}/s/{url.shortCode}
                         </p>
                       </div>
                       <Badge variant="secondary">{url.clicks} clicks</Badge>

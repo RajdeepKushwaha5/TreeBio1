@@ -62,11 +62,11 @@ const PreviewFrame = async ({ links }: PreviewFrameProps) => {
   const userAvatar = userProfile.imageUrl || user?.imageUrl || "";
 
   return (
-    <div className="flex flex-col items-center space-y-4">
+    <div className="flex flex-col items-center space-y-4 w-full">
       {/* Mobile Frame */}
-      <div className="relative">
+      <div className="relative w-full max-w-[280px]">
         {/* Phone Frame */}
-        <div className="w-[280px] h-[580px] bg-zinc-700 rounded-[2.5rem] p-2 shadow-2xl">
+        <div className="w-full aspect-[280/580] bg-zinc-700 rounded-[2.5rem] p-2 shadow-2xl">
           {/* Screen */}
           <div className="w-full h-full bg-gray-50 rounded-[2rem] overflow-hidden relative">
             {/* Status Bar */}

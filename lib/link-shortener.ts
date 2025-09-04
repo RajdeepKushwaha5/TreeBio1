@@ -25,22 +25,37 @@ class LinkShortenerService {
    * Get the correct base URL for the application
    */
   private getBaseUrl(): string {
-    // In production, use the deployed URL
-    if (process.env.VERCEL_URL) {
-      return `https://${process.env.VERCEL_URL}`;
-    }
-    
-    // Use configured app URL if available
+    // Priority 1: Use configured custom domain if available
     if (process.env.NEXT_PUBLIC_APP_URL) {
+      console.log('Using NEXT_PUBLIC_APP_URL:', process.env.NEXT_PUBLIC_APP_URL);
       return process.env.NEXT_PUBLIC_APP_URL;
     }
     
-    // For TreeBio1 specifically, use the known production URL
-    if (process.env.NODE_ENV === 'production') {
+    // Priority 2: For TreeBio1 production, always use the main domain
+    if (process.env.NODE_ENV === 'production' || process.env.VERCEL_ENV === 'production') {
+      console.log('Using production URL: https://treebio1.vercel.app');
       return 'https://treebio1.vercel.app';
     }
     
-    // Fallback to localhost for development
+    // Priority 3: In development or preview, check Vercel URL carefully
+    if (process.env.VERCEL_URL) {
+      const vercelUrl = process.env.VERCEL_URL;
+      
+      // If it's the main production URL, use it
+      if (vercelUrl === 'treebio1.vercel.app') {
+        console.log('Using main Vercel URL:', `https://${vercelUrl}`);
+        return `https://${vercelUrl}`;
+      }
+      
+      // For preview deployments, still use the main production URL for consistency
+      if (vercelUrl.includes('treebio1') && vercelUrl.includes('vercel.app')) {
+        console.log('Preview deployment detected, using main domain instead of:', vercelUrl);
+        return 'https://treebio1.vercel.app';
+      }
+    }
+    
+    // Fallback to localhost for local development
+    console.log('Using localhost fallback');
     return 'http://localhost:3000';
   }
 
@@ -126,7 +141,19 @@ class LinkShortenerService {
         }
       });
 
-      const fullShortUrl = `${this.getBaseUrl()}/s/${shortCode}`;
+      const baseUrl = this.getBaseUrl();
+      const fullShortUrl = `${baseUrl}/s/${shortCode}`;
+      
+      // Debug logging for URL generation
+      console.log('Link Shortener URL Generation:', {
+        environment: process.env.NODE_ENV,
+        vercelEnv: process.env.VERCEL_ENV,
+        vercelUrl: process.env.VERCEL_URL,
+        appUrl: process.env.NEXT_PUBLIC_APP_URL,
+        generatedBaseUrl: baseUrl,
+        fullShortUrl,
+        shortCode
+      });
       
       console.log('Short URL created successfully:', {
         id: shortUrl.id,

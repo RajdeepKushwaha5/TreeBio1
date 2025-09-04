@@ -30,6 +30,7 @@ import { createLinkByUser, deleteLink, editLink, addSocialLink, deleteSocialLink
 import { archiveLink } from "@/modules/archive/actions/index";
 import { LinkCard, LinkFormWithPreview } from "./link-card";
 import { SocialLinkModal, SocialLinkFormData } from "./social-link-modal"; // Import the modal
+import { useRealtime } from "@/components/smart-realtime-provider";
 
 // Zod schemas
 const profileSchema = z.object({
@@ -112,24 +113,68 @@ interface Props {
 const LinkForm = ({ username, bio, link, socialLinks: initialSocialLinks = [] }: Props) => {
   const currentUser = useUser();
   const router = useRouter();
+  
+  // Use real-time context for data and operations
+  const {
+    isConnected,
+    profileData,
+    links: realtimeLinks,
+    socialLinks: realtimeSocialLinks,
+    updateProfile,
+    addLink,
+    updateLink,
+    deleteLink,
+    addSocialLink,
+    updateSocialLink,
+    deleteSocialLink,
+  } = useRealtime();
 
   const [isAddingLink, setIsAddingLink] = React.useState(false);
   const [editingProfile, setEditingProfile] = React.useState(false);
-  const [links, setLinks] = React.useState<Link[]>(link || []);
-  const [userSocialLinks, setUserSocialLinks] = React.useState<SocialLink[]>(initialSocialLinks);
+  // Use real-time data when available, fallback to props
+  const [links, setLinks] = React.useState<Link[]>(realtimeLinks?.length ? realtimeLinks : link || []);
+  const [userSocialLinks, setUserSocialLinks] = React.useState<SocialLink[]>(
+    realtimeSocialLinks?.length ? realtimeSocialLinks : initialSocialLinks
+  );
   const [isSocialModalOpen, setIsSocialModalOpen] = React.useState(false);
   const [editingSocialLink, setEditingSocialLink] = React.useState<SocialLink | null>(null);
   
   const [profile, setProfile] = React.useState<Profile>({
-    firstName: currentUser.user?.firstName || "",
-    lastName: currentUser.user?.lastName || "",
-    username: username || "",
-    bio: bio || "",
+    firstName: profileData?.firstName || currentUser.user?.firstName || "",
+    lastName: profileData?.lastName || currentUser.user?.lastName || "",
+    username: profileData?.username || username || "",
+    bio: profileData?.bio || bio || "",
     imageUrl:
+      profileData?.avatar || 
       currentUser.user?.imageUrl ||
       `https://avatar.iran.liara.run/username?username=[${currentUser.user?.firstName}+${currentUser.user?.lastName}]`,
   });
   const [editingLinkId, setEditingLinkId] = React.useState<string | null>(null);
+
+  // Update local state when real-time data changes
+  React.useEffect(() => {
+    if (realtimeLinks?.length) {
+      setLinks(realtimeLinks);
+    }
+  }, [realtimeLinks]);
+
+  React.useEffect(() => {
+    if (realtimeSocialLinks?.length) {
+      setUserSocialLinks(realtimeSocialLinks);
+    }
+  }, [realtimeSocialLinks]);
+
+  React.useEffect(() => {
+    if (profileData) {
+      setProfile({
+        firstName: profileData.firstName || "",
+        lastName: profileData.lastName || "",
+        username: profileData.username || "",
+        bio: profileData.bio || "",
+        imageUrl: profileData.avatar || profileData.imageUrl || "",
+      });
+    }
+  }, [profileData]);
 
   // Profile form
   const profileForm = useForm<ProfileFormData>({
@@ -155,12 +200,9 @@ const LinkForm = ({ username, bio, link, socialLinks: initialSocialLinks = [] }:
   // Profile submit handler
   const onProfileSubmit = async (data: ProfileFormData) => {
     try {
-      setProfile((prev) => ({ ...prev, ...data }));
-
-      const updatedProfile = await createUserProfile(data);
-
-      console.log("Updated Profile:", updatedProfile);
-      toast.success("Profile updated successfully!");
+      // Use real-time update function
+      await updateProfile(data);
+      console.log("Updated Profile:", data);
     } catch (error) {
       console.error("Error updating profile:", error);
       toast.error("Failed to update profile.");
@@ -173,16 +215,9 @@ const LinkForm = ({ username, bio, link, socialLinks: initialSocialLinks = [] }:
   // Link submit handler
   const onLinkSubmit = async (data: LinkFormData) => {
     try {
-      const link = await createLinkByUser(data);
-      console.log("Created Link:", link);
-
-      if (link?.data?.id) {
-        setLinks((prev) => [
-          ...prev,
-          { id: link.data.id, ...data, clickCount: 0 },
-        ]);
-      }
-      toast.success("Link created successfully!");
+      // Use real-time add function
+      await addLink(data);
+      console.log("Created Link:", data);
     } catch (error) {
       console.error("Something Went wrong", error);
       toast.error("Failed to create link.");
@@ -196,34 +231,13 @@ const LinkForm = ({ username, bio, link, socialLinks: initialSocialLinks = [] }:
   const onSocialLinkSubmit = async (data: SocialLinkFormData) => {
     try {
       if (editingSocialLink) {
-        // Edit existing social link
-        const result = await editSocialLink(data, editingSocialLink.id);
-        if (result?.sucess) {
-          setUserSocialLinks((prev) =>
-            prev.map((link) =>
-              link.id === editingSocialLink.id
-                ? { ...link, platform: data.platform, url: data.url }
-                : link
-            )
-          );
-          toast.success(`${data.platform} link updated successfully!`);
-        } else {
-          toast.error(result?.error || "Failed to update social link.");
-        }
+        // Use real-time update function
+        await updateSocialLink({ ...editingSocialLink, ...data });
+        console.log("Updated social link:", data);
       } else {
-        // Add new social link
-        const result = await addSocialLink(data);
-        if (result?.sucess && result?.data) {
-          const newSocialLink: SocialLink = {
-            id: result.data.id,
-            platform: data.platform,
-            url: data.url,
-          };
-          setUserSocialLinks((prev) => [...prev, newSocialLink]);
-          toast.success(`${data.platform} link added successfully!`);
-        } else {
-          toast.error(result?.error || "Failed to add social link.");
-        }
+        // Use real-time add function
+        await addSocialLink(data);
+        console.log("Added social link:", data);
       }
     } catch (error) {
       console.error("Error saving social link:", error);
@@ -236,10 +250,9 @@ const LinkForm = ({ username, bio, link, socialLinks: initialSocialLinks = [] }:
   // Delete link handler
   const handleDeleteLink = async (linkId: string) => {
     try {
-      const result = await deleteLink(linkId);
-      console.log("Delete Result:", result);
-      setLinks((prev) => prev.filter((link) => link.id !== linkId));
-      toast.success("Link deleted successfully!");
+      // Use real-time delete function
+      await deleteLink(linkId);
+      console.log("Deleted link:", linkId);
     } catch (error) {
       console.error("Error deleting link:", error);
       toast.error("Failed to delete link.");
@@ -269,15 +282,9 @@ const LinkForm = ({ username, bio, link, socialLinks: initialSocialLinks = [] }:
   const onEditLinkSubmit = async (data: LinkFormData) => {
     if (!editingLinkId) return;
     try {
-      const res = await editLink(data, editingLinkId);
-      if (res?.sucess) {
-        setLinks((prev) =>
-          prev.map((l) => (l.id === editingLinkId ? { ...l, ...data } : l))
-        );
-        toast.success("Link edited successfully!");
-      } else {
-        toast.error(res?.error || "Failed to edit link.");
-      }
+      // Use real-time update function
+      await updateLink({ ...data, id: editingLinkId });
+      console.log("Updated link:", data);
     } catch (error) {
       console.error("Error editing link:", error);
       toast.error("Failed to edit link.");
@@ -300,13 +307,9 @@ const LinkForm = ({ username, bio, link, socialLinks: initialSocialLinks = [] }:
 
   const handleDeleteSocialLink = async (socialLinkId: string) => {
     try {
-      const result = await deleteSocialLink(socialLinkId);
-      if (result?.sucess) {
-        setUserSocialLinks((prev) => prev.filter((link) => link.id !== socialLinkId));
-        toast.success("Social link removed successfully!");
-      } else {
-        toast.error(result?.error || "Failed to delete social link.");
-      }
+      // Use real-time delete function
+      await deleteSocialLink(socialLinkId);
+      console.log("Deleted social link:", socialLinkId);
     } catch (error) {
       console.error("Error deleting social link:", error);
       toast.error("Failed to delete social link.");
@@ -334,6 +337,16 @@ const LinkForm = ({ username, bio, link, socialLinks: initialSocialLinks = [] }:
 
   return (
     <div className="w-full max-w-2xl mx-auto space-y-6 px-4 sm:px-0">
+      {/* Real-time Status Indicator */}
+      <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+        <div className="flex items-center gap-2">
+          <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'}`} />
+          <span className="text-sm text-gray-600">
+            {isConnected ? 'Real-time updates active' : 'Real-time updates unavailable (using polling)'}
+          </span>
+        </div>
+      </div>
+
       {/* Profile Section */}
       <Card className="border-2 border-dashed border-gray-200 hover:border-green-400 transition-colors">
         <CardContent className="p-4 sm:p-6">

@@ -248,9 +248,3 @@ copies or substantial portions of the Software.
   
   *Made with ❤️ by Rajdeep Kushwaha*
 </div>
-- **Profile Customization**: Avatar, bio, social links
-- **Responsive Design**: Optimized for all devices
-  
-  <!-- Repository Links -->
-  <p>🔗 <a href="https://github.com/RajdeepKushwaha5/TreeBio1">GitHub Repository</a> | 🐛 <a href="https://github.com/RajdeepKushwaha5/TreeBio1/issues">Report Issues</a> | 💡 <a href="https://github.com/RajdeepKushwaha5/TreeBio1/discussions">Discussions</a></p>
-</div>

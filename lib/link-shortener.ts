@@ -19,8 +19,30 @@ export interface ShortUrlStats {
 }
 
 class LinkShortenerService {
-  private readonly baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
   private readonly shortCodeLength = 6;
+
+  /**
+   * Get the correct base URL for the application
+   */
+  private getBaseUrl(): string {
+    // In production, use the deployed URL
+    if (process.env.VERCEL_URL) {
+      return `https://${process.env.VERCEL_URL}`;
+    }
+    
+    // Use configured app URL if available
+    if (process.env.NEXT_PUBLIC_APP_URL) {
+      return process.env.NEXT_PUBLIC_APP_URL;
+    }
+    
+    // For TreeBio1 specifically, use the known production URL
+    if (process.env.NODE_ENV === 'production') {
+      return 'https://treebio1.vercel.app';
+    }
+    
+    // Fallback to localhost for development
+    return 'http://localhost:3000';
+  }
 
   /**
    * Generate a unique short code
@@ -60,7 +82,7 @@ class LinkShortenerService {
       // Prevent circular redirects - check if URL points to our own shortener
       try {
         const urlObj = new URL(validatedUrl);
-        const baseUrlObj = new URL(this.baseUrl);
+        const baseUrlObj = new URL(this.getBaseUrl());
         if (urlObj.hostname === baseUrlObj.hostname && urlObj.pathname.startsWith('/s/')) {
           throw new Error('Cannot create short URL that points to another short URL');
         }
@@ -104,7 +126,7 @@ class LinkShortenerService {
         }
       });
 
-      const fullShortUrl = `${this.baseUrl}/s/${shortCode}`;
+      const fullShortUrl = `${this.getBaseUrl()}/s/${shortCode}`;
       
       console.log('Short URL created successfully:', {
         id: shortUrl.id,
@@ -258,7 +280,7 @@ class LinkShortenerService {
       return shortUrls.map((url: any) => ({
         id: url.id,
         shortCode: url.shortCode,
-        shortUrl: `${this.baseUrl}/s/${url.shortCode}`,
+        shortUrl: `${this.getBaseUrl()}/s/${url.shortCode}`,
         originalUrl: url.originalUrl,
         clicks: url.clicks,
         isActive: url.isActive,

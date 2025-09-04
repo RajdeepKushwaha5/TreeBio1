@@ -99,7 +99,26 @@ export default function LinkShortenerPage() {
   };
 
   const handleGenerate = async () => {
-    if (!originalUrl) return;
+    if (!originalUrl) {
+      toast.error('Please enter a URL to shorten');
+      return;
+    }
+    
+    // Basic URL validation
+    const urlTrimmed = originalUrl.trim();
+    if (!urlTrimmed) {
+      toast.error('Please enter a valid URL');
+      return;
+    }
+    
+    // Check if it's a valid URL format
+    try {
+      const testUrl = urlTrimmed.startsWith('http') ? urlTrimmed : `https://${urlTrimmed}`;
+      new URL(testUrl);
+    } catch {
+      toast.error('Please enter a valid URL (e.g., https://example.com)');
+      return;
+    }
     
     setIsGenerating(true);
     try {
@@ -133,6 +152,7 @@ export default function LinkShortenerPage() {
           setRecentShortUrls(prev => [newShortUrl, ...prev]);
           setOriginalUrl("");
           setCustomAlias("");
+          toast.success('Short URL created successfully!');
         } else {
           toast.error('Error: ' + result.error);
         }

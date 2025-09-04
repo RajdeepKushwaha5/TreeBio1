@@ -4,6 +4,7 @@ import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 const isPublicRoute = createRouteMatcher([
   '/sign-in(.*)', 
   '/sign-up(.*)',
+  '/s/(.*)', // Public access to short URL redirects - MUST be before generic username pattern
   '/([^/]+)' // This matches any single segment path like /username
 ])
 

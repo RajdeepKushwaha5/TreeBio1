@@ -1,30 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { linkShortener } from '@/lib/link-shortener';
+// This file has been removed to fix shortener conflicts.
+// Redirects are now handled exclusively by /s/[shortCode]/page.tsx
+// This prevents duplication and ensures proper URL handling.
+//
+// If you need this functionality, use:
+// - GET /s/[shortCode] for redirects (handled by page.tsx)
+// - POST /api/shortener for creating short URLs
+// - GET /api/shortener/[shortCode]/stats for analytics
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ shortCode: string }> }
-) {
-  try {
-    const { shortCode } = await params;
-    const result = await linkShortener.getOriginalUrl(shortCode);
-
-    if (!result.success) {
-      return NextResponse.json(
-        { error: result.error },
-        { status: 404 }
-      );
-    }
-
-    // Redirect to original URL
-    return NextResponse.redirect(result.originalUrl!, 302);
-  } catch (error) {
-    console.error('Error in redirect API:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
-  }
-}
-
-export const dynamic = 'force-dynamic';
+export {};

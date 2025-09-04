@@ -57,6 +57,17 @@ class LinkShortenerService {
 
       const validatedUrl = validation.normalizedUrl!;
 
+      // Prevent circular redirects - check if URL points to our own shortener
+      try {
+        const urlObj = new URL(validatedUrl);
+        const baseUrlObj = new URL(this.baseUrl);
+        if (urlObj.hostname === baseUrlObj.hostname && urlObj.pathname.startsWith('/s/')) {
+          throw new Error('Cannot create short URL that points to another short URL');
+        }
+      } catch (urlError) {
+        // If URL parsing fails, let the original validation handle it
+      }
+
       let shortCode = this.generateShortCode(customCode);
       let attempts = 0;
       const maxAttempts = 5;

@@ -1,7 +1,7 @@
 # 🌳 TreeBio
 
 <div align="center">
-  <img src="https://treebio1.vercel.app/favicon.ico" alt="TreeBio Logo" width="64" height="64">
+  <img src="https://treebio1.vercel.app/favicon.svg" alt="TreeBio Logo" width="64" height="64">
   
   **A Modern Bio Link Platform for the Digital Age**
   
@@ -280,7 +280,7 @@ NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY="pk_live_..."
 CLERK_SECRET_KEY="sk_live_..."
 
 # Production App URL
-NEXT_PUBLIC_APP_URL="https://yourdomain.com"
+NEXT_PUBLIC_APP_URL="https://treebio1.vercel.app"
 ```
 
 ### Other Platforms
@@ -405,10 +405,10 @@ We welcome contributions from the community! Here's how you can help:
 #### Database Connection Issues
 ```bash
 # Check database connection
-curl https://yourdomain.com/api/debug/database
+curl https://treebio1.vercel.app/api/debug/database
 
 # Verify environment variables
-curl https://yourdomain.com/api/debug/env
+curl https://treebio1.vercel.app/api/debug/env
 ```
 
 #### Build Failures

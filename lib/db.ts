@@ -91,14 +91,6 @@ function createPrismaClient(): PrismaClient {
         db: {
           url: databaseUrl
         }
-      },
-      // Add connection pool settings for better reliability
-      __internal: {
-        engine: {
-          // These options help with serverless environments
-          connectionTimeout: 20000,
-          queryTimeout: 60000,
-        }
       }
     });
 

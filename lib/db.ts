@@ -22,17 +22,29 @@ const createMockDb = () => ({
   }
 });
 
-// Initialize Prisma client with fallback
-let db: PrismaClient | any;
+// Initialize Prisma client with proper error handling
+let db: PrismaClient;
 
 try {
-  db = global.__prisma || new PrismaClient();
-  if (process.env.NODE_ENV !== "production") {
-    global.__prisma = db;
+  // In production, always create a new instance
+  // In development, use global instance for hot reloading
+  if (process.env.NODE_ENV === "production") {
+    db = new PrismaClient({
+      log: ['error', 'warn'],
+    });
+  } else {
+    if (!global.__prisma) {
+      global.__prisma = new PrismaClient({
+        log: ['query', 'error', 'warn'],
+      });
+    }
+    db = global.__prisma;
   }
+  
+  console.log("✅ Prisma client initialized successfully");
 } catch (error) {
-  console.warn("⚠️ Prisma client not generated. Using mock database. Please run 'npx prisma generate'");
-  db = createMockDb();
+  console.error("❌ Failed to initialize Prisma client:", error);
+  throw new Error("Database initialization failed. Please check your DATABASE_URL environment variable.");
 }
 
 export { db };

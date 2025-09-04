@@ -26,8 +26,14 @@ const Page = async () => {
           <LinkForm
             username={profile?.username || ''}
             bio={profile?.bio || ''}
-            link={links.data || []}
-            socialLinks={profile?.socialLinks || []}
+            link={(links.data || []).map((link: any) => ({
+              ...link,
+              description: link.description || ''
+            }))}
+            socialLinks={(profile?.socialLinks || []).map((social: any) => ({
+              ...social,
+              platform: social.platform || 'instagram' // Default platform fallback
+            }))}
           />
         </div>
         <div className="order-1 lg:order-2 lg:sticky lg:top-6">

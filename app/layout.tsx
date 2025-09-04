@@ -32,9 +32,9 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/icon.svg",
-        width: 32,
-        height: 32,
+        url: "/favicon.svg",
+        width: 100,
+        height: 100,
         alt: "TreeBio Logo",
       },
     ],
@@ -44,17 +44,12 @@ export const metadata: Metadata = {
     title: "🌳 TreeBio - Modern Bio Link Platform",
     description: "Create beautiful, customizable bio link pages with analytics, QR codes, and more.",
     creator: "@rajdeeptwts",
-    images: ["/icon.svg"],
+    images: ["/favicon.svg"],
   },
   icons: {
-    icon: [
-      { url: "/favicon.svg", type: "image/svg+xml" },
-      { url: "/icon.svg", type: "image/svg+xml", sizes: "32x32" },
-    ],
-    apple: [
-      { url: "/icon.svg", type: "image/svg+xml", sizes: "32x32" },
-    ],
+    icon: "/favicon.svg",
     shortcut: "/favicon.svg",
+    apple: "/favicon.svg",
   },
   robots: {
     index: true,

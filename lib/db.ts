@@ -14,19 +14,6 @@ function getDatabaseUrl(): string {
               process.env.NEON_DATABASE_URL ||
               process.env.DATABASE_CONNECTION_STRING;
 
-  console.log('🔍 Environment Variables Check:');
-  console.log('- NODE_ENV:', process.env.NODE_ENV);
-  console.log('- VERCEL:', process.env.VERCEL);
-  console.log('- VERCEL_ENV:', process.env.VERCEL_ENV);
-  console.log('- DATABASE_URL:', process.env.DATABASE_URL ? `✅ SET (${process.env.DATABASE_URL.length} chars)` : '❌ NOT SET');
-  console.log('- POSTGRES_URL:', process.env.POSTGRES_URL ? `✅ SET (${process.env.POSTGRES_URL.length} chars)` : '❌ NOT SET');
-  console.log('- POSTGRES_PRISMA_URL:', process.env.POSTGRES_PRISMA_URL ? `✅ SET (${process.env.POSTGRES_PRISMA_URL.length} chars)` : '❌ NOT SET');
-  
-  // Log first 50 characters of the URL if found (for debugging)
-  if (url) {
-    console.log('- Found URL Preview:', url.substring(0, 50) + '...');
-  }
-
   return url || '';
 }
 
@@ -102,24 +89,46 @@ function createPrismaClient(): PrismaClient {
   }
 }
 
-// Initialize database connection with proper singleton pattern
-let db: PrismaClient;
+// Lazy database connection - only initialize when actually used
+let _db: PrismaClient | null = null;
 
-try {
-  if (process.env.NODE_ENV === 'production') {
-    // In production, create a new instance
-    db = createPrismaClient();
-  } else {
-    // In development, use global instance for hot reloading
-    if (!global.__prisma) {
-      global.__prisma = createPrismaClient();
+function getDatabase(): PrismaClient {
+  if (!_db) {
+    // Check if we're in build mode - don't initialize database during build
+    const isBuildMode = process.env.NODE_ENV === 'production' && 
+                       !process.env.VERCEL_ENV && 
+                       !process.env.VERCEL;
+    
+    if (isBuildMode) {
+      console.log('🔧 Build mode detected - skipping database initialization');
+      throw new Error('Database not available during build - this should not be called during static generation');
     }
-    db = global.__prisma;
+
+    if (process.env.NODE_ENV === 'production') {
+      // In production, create a new instance
+      _db = createPrismaClient();
+    } else {
+      // In development, use global instance for hot reloading
+      if (!global.__prisma) {
+        global.__prisma = createPrismaClient();
+      }
+      _db = global.__prisma;
+    }
   }
-} catch (error) {
-  console.error('❌ Database initialization failed:', error);
-  // Re-throw the error so it's visible in the application
-  throw error;
+  return _db;
 }
 
-export { db };
+// Export a proxy that lazily initializes the database connection
+export const db = new Proxy({} as PrismaClient, {
+  get(target, prop) {
+    const database = getDatabase();
+    const value = database[prop as keyof PrismaClient];
+    
+    // Bind methods to maintain context
+    if (typeof value === 'function') {
+      return value.bind(database);
+    }
+    
+    return value;
+  }
+});

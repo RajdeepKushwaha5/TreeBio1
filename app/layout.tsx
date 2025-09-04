@@ -4,7 +4,7 @@ import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 
 import { ThemeProvider } from "@/components/theme-provider";
-import { RealtimeProvider } from "@/components/realtime-provider-fallback";
+import { SmartRealtimeProvider } from "@/components/smart-realtime-provider";
 import { Toaster } from "sonner";
 
 const poppins = Poppins({
@@ -82,10 +82,10 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <RealtimeProvider>
+            <SmartRealtimeProvider>
               <Toaster />
               {children}
-            </RealtimeProvider>
+            </SmartRealtimeProvider>
           </ThemeProvider>
         </body>
       </html>

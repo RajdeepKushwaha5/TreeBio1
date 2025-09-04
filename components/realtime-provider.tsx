@@ -31,7 +31,7 @@ export function RealtimeProvider({ children }: { children: React.ReactNode }) {
   const [socialLinks, setSocialLinks] = useState<any[]>([]);
 
   useEffect(() => {
-    if (!user?.id) return;
+    if (!user?.id || !pusherClient) return;
 
     // Subscribe to user-specific updates
     const userChannel = pusherClient.subscribe(PUSHER_CHANNELS.USER_CHANNEL(user.id));
@@ -100,7 +100,9 @@ export function RealtimeProvider({ children }: { children: React.ReactNode }) {
     refreshData();
 
     return () => {
-      pusherClient.unsubscribe(PUSHER_CHANNELS.USER_CHANNEL(user.id));
+      if (pusherClient && user?.id) {
+        pusherClient.unsubscribe(PUSHER_CHANNELS.USER_CHANNEL(user.id));
+      }
     };
   }, [user?.id]);
 

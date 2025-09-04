@@ -10,7 +10,7 @@ export const useRealtimeUserUpdates = (userId: string) => {
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    if (!userId) return;
+    if (!userId || !pusherClient) return;
 
     const channel = pusherClient.subscribe(PUSHER_CHANNELS.USER_CHANNEL(userId));
     channelRef.current = channel;
@@ -25,7 +25,7 @@ export const useRealtimeUserUpdates = (userId: string) => {
     });
 
     return () => {
-      if (channelRef.current) {
+      if (channelRef.current && pusherClient) {
         pusherClient.unsubscribe(PUSHER_CHANNELS.USER_CHANNEL(userId));
         channelRef.current = null;
       }
@@ -58,7 +58,7 @@ export const useRealtimeProfileUpdates = (username: string) => {
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    if (!username) return;
+    if (!username || !pusherClient) return;
 
     const channel = pusherClient.subscribe(PUSHER_CHANNELS.PUBLIC_CHANNEL(username));
     channelRef.current = channel;
@@ -72,7 +72,7 @@ export const useRealtimeProfileUpdates = (username: string) => {
     });
 
     return () => {
-      if (channelRef.current) {
+      if (channelRef.current && pusherClient) {
         pusherClient.unsubscribe(PUSHER_CHANNELS.PUBLIC_CHANNEL(username));
         channelRef.current = null;
       }

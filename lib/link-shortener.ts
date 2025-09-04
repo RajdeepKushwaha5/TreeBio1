@@ -175,12 +175,12 @@ class LinkShortenerService {
       });
 
       // Calculate unique clicks (by IP)
-      const uniqueIps = new Set(analytics.map(a => a.clickerIp));
+      const uniqueIps = new Set(analytics.map((a: any) => a.clickerIp));
       const uniqueClicks = uniqueIps.size;
 
       // Top countries
       const countryCount: Record<string, number> = {};
-      analytics.forEach(a => {
+      analytics.forEach((a: any) => {
         if (a.country) {
           countryCount[a.country] = (countryCount[a.country] || 0) + 1;
         }
@@ -193,7 +193,7 @@ class LinkShortenerService {
 
       // Top devices
       const deviceCount: Record<string, number> = {};
-      analytics.forEach(a => {
+      analytics.forEach((a: any) => {
         if (a.device) {
           deviceCount[a.device] = (deviceCount[a.device] || 0) + 1;
         }
@@ -210,8 +210,8 @@ class LinkShortenerService {
       thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
       analytics
-        .filter(a => a.clickedAt >= thirtyDaysAgo)
-        .forEach(a => {
+        .filter((a: any) => a.clickedAt >= thirtyDaysAgo)
+        .forEach((a: any) => {
           const date = a.clickedAt.toISOString().split('T')[0];
           dateCount[date] = (dateCount[date] || 0) + 1;
         });
@@ -244,7 +244,7 @@ class LinkShortenerService {
         take: 100
       });
 
-      return shortUrls.map(url => ({
+      return shortUrls.map((url: any) => ({
         id: url.id,
         shortCode: url.shortCode,
         shortUrl: `${this.baseUrl}/s/${url.shortCode}`,

@@ -121,7 +121,7 @@ export const collectionsService = {
         userId: user.id,
         createdAt: new Date(),
         updatedAt: new Date(),
-        links: userLinks.map((link, index) => ({
+        links: userLinks.map((link: any, index: number) => ({
           id: link.id,
           title: link.title,
           url: link.url,

@@ -32,7 +32,7 @@ export async function RecentActivity({ userId }: RecentActivityProps) {
       </CardHeader>
       <CardContent>
         <div className="space-y-3">
-          {recentVisitors.map((visitor, index) => (
+          {recentVisitors.map((visitor: any, index: number) => (
             <div key={index} className="flex items-center justify-between p-2 rounded-md bg-zinc-100 dark:bg-zinc-800">
               <div className="flex items-center space-x-3">
                 <div className="flex-shrink-0">

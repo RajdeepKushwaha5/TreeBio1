@@ -99,7 +99,7 @@ export function TemplateBioPage({ userData, className, isPreview = false }: Temp
   );
 
   return (
-    <div className={containerClasses} style={templateVars}>
+    <div className={containerClasses} style={templateVars as React.CSSProperties}>
       {/* Background pattern overlay */}
       {styles.backgroundPattern === 'dots' && (
         <div className="absolute inset-0 template-bg-dots template-preview-overlay" />

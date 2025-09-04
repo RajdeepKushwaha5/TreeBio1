@@ -123,7 +123,7 @@ export const getDailyProfileVisits = async (userId: string, days: number = 30) =
     });
 
     // Group by date
-    const dailyVisits = visits.reduce((acc, visit) => {
+    const dailyVisits = visits.reduce((acc: Record<string, number>, visit: any) => {
       const date = visit.visitedAt.toISOString().split('T')[0];
       acc[date] = (acc[date] || 0) + 1;
       return acc;
@@ -131,9 +131,9 @@ export const getDailyProfileVisits = async (userId: string, days: number = 30) =
 
     // Convert to array format for charts
     const chartData = Object.entries(dailyVisits)
-      .map(([date, count]) => ({
+      .map(([date, count]): { date: string; visits: number } => ({
         date,
-        visits: count
+        visits: Number(count)
       }))
       .sort((a, b) => a.date.localeCompare(b.date));
 
@@ -182,11 +182,11 @@ export const getUserAnalytics = async (userId: string) => {
     });
 
     // Get total link clicks
-    const totalLinkClicks = userLinks.reduce((sum, link) => sum + link.clickCount, 0);
+    const totalLinkClicks = userLinks.reduce((sum: number, link: any) => sum + link.clickCount, 0);
 
     // Get link analytics for each link
     const linkAnalytics = await Promise.all(
-      userLinks.map(async (link) => {
+      userLinks.map(async (link: any) => {
         const analytics = await getLinkAnalytics(link.id);
         return {
           linkId: link.id,
@@ -197,7 +197,7 @@ export const getUserAnalytics = async (userId: string) => {
     );
 
     // Most clicked link
-    const mostClickedLink = userLinks.reduce((max, link) => 
+    const mostClickedLink = userLinks.reduce((max: any, link: any) => 
       link.clickCount > (max?.clickCount || 0) ? link : max, 
       null as typeof userLinks[0] | null
     );
@@ -238,7 +238,7 @@ export const logLinkClick = async (linkId: string, clickerIp?: string) => {
     // Normalize the IP
     ip = normalizeIP(ip.trim());
 
-    const result = await db.$transaction(async (tx) => {
+    const result = await db.$transaction(async (tx: any) => {
       const analytics = await tx.linkAnalytics.create({
         data: {
           linkId: linkId,
@@ -378,7 +378,7 @@ export const getDailyLinkClicks = async (linkId: string, days: number = 30) => {
     });
 
     // Group by date
-    const dailyClicks = clicks.reduce((acc, click) => {
+    const dailyClicks = clicks.reduce((acc: Record<string, number>, click: any) => {
       const date = click.clickedAt.toISOString().split('T')[0];
       acc[date] = (acc[date] || 0) + 1;
       return acc;

@@ -26,15 +26,13 @@ const Page = async () => {
           <LinkForm
             username={profile?.username || ''}
             bio={profile?.bio || ''}
-            // @ts-expect-error - Legacy component prop types
             link={links.data || []}
-            // @ts-expect-error - Legacy component prop types  
             socialLinks={profile?.socialLinks || []}
           />
         </div>
         <div className="order-1 lg:order-2 lg:sticky lg:top-6">
           <PreviewFrame
-            links={previewData.data.map((link) => ({
+            links={previewData.data.map((link: any) => ({
               ...link,
               description:
                 link.description === null ? undefined : link.description,

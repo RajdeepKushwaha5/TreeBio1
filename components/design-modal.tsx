@@ -27,6 +27,7 @@ interface DesignModalProps {
     name: string;
     bio: string;
     avatar: string;
+    username?: string; // Added username field to match component usage
     links: Array<{
       id: string;
       title: string;
@@ -72,6 +73,7 @@ export function DesignModal({ children, userData: initialUserData }: DesignModal
       name: "Your Name",
       bio: "Your bio description goes here. Share what you do and what you're passionate about.",
       avatar: "",
+      username: "your-username", // Added default username
       links: [
         { 
           id: "default-1", 

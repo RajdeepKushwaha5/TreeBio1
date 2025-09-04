@@ -24,8 +24,8 @@ export interface SocialPlatform {
   name: string;
   displayName: string;
   category: 'social' | 'professional' | 'creative' | 'coding' | 'music' | 'business' | 'other';
-  icon: React.ComponentType<{ size?: number; className?: string }>;
-  brandIcon: React.ComponentType<{ size?: number; className?: string }>;
+  icon: React.ComponentType<any>; // Simplified to accept Lucide React components
+  brandIcon: React.ComponentType<any>; // Simplified to accept Lucide React components
   color: string;
   urlPattern: RegExp;
   placeholderUrl: string;
@@ -451,7 +451,7 @@ export class SocialPlatformService {
   /**
    * Get platform icon component
    */
-  static getPlatformIcon(platformId: string, branded = false): React.ComponentType<{ size?: number; className?: string }> {
+  static getPlatformIcon(platformId: string, branded = false): React.ComponentType<any> {
     const platform = this.getPlatform(platformId);
     if (!platform) return Globe;
     return branded ? platform.brandIcon : platform.icon;
@@ -529,7 +529,7 @@ export class SocialPlatformService {
   /**
    * Get platform icon from URL
    */
-  static getPlatformIconFromUrl(url: string, branded = false): React.ComponentType<{ size?: number; className?: string }> {
+  static getPlatformIconFromUrl(url: string, branded = false): React.ComponentType<any> {
     const platform = this.detectPlatformFromUrl(url);
     if (!platform) return Globe;
     return branded ? platform.brandIcon : platform.icon;

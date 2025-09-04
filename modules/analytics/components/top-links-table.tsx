@@ -32,7 +32,7 @@ export async function TopLinksTable({ userId }: TopLinksTableProps) {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {topLinks.map((link, index) => (
+          {topLinks.map((link: any, index: number) => (
             <div
               key={link.id}
               className="flex items-center justify-between p-3 rounded-lg bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700"

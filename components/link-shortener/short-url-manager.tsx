@@ -12,6 +12,8 @@ import {
   Settings, 
   BarChart3,
   Globe,
+  Calendar,
+  ExternalLink,
   Copy,
   Loader2
 } from "lucide-react";
@@ -25,13 +27,6 @@ interface ShortUrl {
   createdAt: string;
   isActive: boolean;
   expiresAt?: string;
-}
-
-interface ApiShortUrlResult {
-  id: string;
-  shortCode: string;
-  originalUrl: string;
-  shortUrl: string;
 }
 
 export function ShortUrlManager() {
@@ -95,7 +90,7 @@ export function ShortUrlManager() {
       
       if (response.ok && result.success) {
         // Convert API results to our format
-        const newShortUrls: ShortUrl[] = result.results.map((item: ApiShortUrlResult) => ({
+        const newShortUrls: ShortUrl[] = result.results.map((item: any) => ({
           id: item.id,
           shortCode: item.shortCode,
           originalUrl: item.originalUrl,

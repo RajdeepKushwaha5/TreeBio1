@@ -99,9 +99,7 @@ export default function LinkShortenerPage() {
   };
 
   const handleGenerate = async () => {
-    if (!originalUrl) {
-      return;
-    }
+    if (!originalUrl) return;
     
     setIsGenerating(true);
     try {
@@ -118,6 +116,7 @@ export default function LinkShortenerPage() {
 
       if (response.ok) {
         const result = await response.json();
+        console.log('API response:', result);
         
         if (result.success) {
           const newShortUrl: ShortUrl = {

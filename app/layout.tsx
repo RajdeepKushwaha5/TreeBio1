@@ -14,8 +14,59 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "TreeBio ",
-  description: "TreeBio - Your lintree alternative for managing your links",
+  title: "🌳 TreeBio - Modern Bio Link Platform",
+  description: "TreeBio - Create beautiful, customizable bio link pages with analytics, QR codes, URL shortening, and more. The modern alternative to traditional link-in-bio services.",
+  keywords: ["bio link", "link in bio", "social media", "profile links", "digital presence", "url shortener", "qr codes"],
+  authors: [{ name: "Rajdeep Kushwaha", url: "https://github.com/RajdeepKushwaha5" }],
+  creator: "Rajdeep Kushwaha",
+  publisher: "TreeBio",
+  metadataBase: new URL("https://treebio1.vercel.app"),
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "🌳 TreeBio - Modern Bio Link Platform",
+    description: "Create beautiful, customizable bio link pages with analytics, QR codes, and more.",
+    url: "https://treebio1.vercel.app",
+    siteName: "TreeBio",
+    type: "website",
+    images: [
+      {
+        url: "/icon.svg",
+        width: 32,
+        height: 32,
+        alt: "TreeBio Logo",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "🌳 TreeBio - Modern Bio Link Platform",
+    description: "Create beautiful, customizable bio link pages with analytics, QR codes, and more.",
+    creator: "@rajdeeptwts",
+    images: ["/icon.svg"],
+  },
+  icons: {
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/icon.svg", type: "image/svg+xml", sizes: "32x32" },
+    ],
+    apple: [
+      { url: "/icon.svg", type: "image/svg+xml", sizes: "32x32" },
+    ],
+    shortcut: "/favicon.svg",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 };
 
 export default function RootLayout({
@@ -26,6 +77,9 @@ export default function RootLayout({
   return (
     <ClerkProvider publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || "pk_test_cmVzdGVkLWRyYWtlLTkzLmNsZXJrLmFjY291bnRzLmRldiQ"}>
       <html lang="en" suppressHydrationWarning>
+        <head>
+          <link rel="manifest" href="/manifest.json" />
+        </head>
         <body className={`${poppins.variable} antialiased`}>
           <ThemeProvider
             attribute="class"

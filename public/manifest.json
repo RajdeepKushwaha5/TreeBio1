@@ -1,0 +1,26 @@
+{
+  "name": "TreeBio - Modern Bio Link Platform",
+  "short_name": "TreeBio",
+  "description": "Create beautiful, customizable bio link pages with analytics, QR codes, URL shortening, and more.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#22c55e",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "32x32",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon.svg", 
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ],
+  "categories": ["productivity", "social", "utilities"],
+  "lang": "en",
+  "dir": "ltr"
+}

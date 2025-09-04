@@ -14,7 +14,7 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "🌳 TreeBio - Modern Bio Link Platform",
+  title: "TreeBio - Modern Bio Link Platform",
   description: "TreeBio - Create beautiful, customizable bio link pages with analytics, QR codes, URL shortening, and more. The modern alternative to traditional link-in-bio services.",
   keywords: ["bio link", "link in bio", "social media", "profile links", "digital presence", "url shortener", "qr codes"],
   authors: [{ name: "Rajdeep Kushwaha", url: "https://github.com/RajdeepKushwaha5" }],
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   openGraph: {
-    title: "🌳 TreeBio - Modern Bio Link Platform",
+    title: "TreeBio - Modern Bio Link Platform",
     description: "Create beautiful, customizable bio link pages with analytics, QR codes, and more.",
     url: "https://treebio1.vercel.app",
     siteName: "TreeBio",
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "🌳 TreeBio - Modern Bio Link Platform",
+    title: "TreeBio - Modern Bio Link Platform",
     description: "Create beautiful, customizable bio link pages with analytics, QR codes, and more.",
     creator: "@rajdeeptwts",
     images: ["/favicon.svg"],

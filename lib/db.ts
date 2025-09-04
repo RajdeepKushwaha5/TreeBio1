@@ -5,46 +5,57 @@ declare global {
   var __prisma: PrismaClient | undefined
 }
 
-// Temporary mock for development when Prisma client isn't generated
-const createMockDb = () => ({
-  user: {
-    upsert: async () => ({ id: 'mock-user', clerkId: 'mock-clerk-id' }),
-    findUnique: async () => null,
-    findMany: async () => [],
-    create: async () => ({ id: 'mock-user' }),
-    update: async () => ({ id: 'mock-user' }),
-    delete: async () => ({ id: 'mock-user' })
-  },
-  // Add other models as needed
-  link: {
-    findMany: async () => [],
-    create: async () => ({ id: 'mock-link' })
+// Lazy database connection - only initialize when actually used
+let _db: PrismaClient | null = null;
+
+function createPrismaClient(): PrismaClient {
+  // Validate environment first
+  if (!process.env.DATABASE_URL) {
+    const errorMsg = `
+❌ DATABASE_URL environment variable is not set!
+
+Please add your PostgreSQL connection string to your environment:
+
+1. For local development, create a .env.local file with:
+   DATABASE_URL="postgresql://username:password@host:port/database"
+
+2. For Vercel deployment, add the environment variable in your Vercel dashboard:
+   https://vercel.com/your-username/your-project/settings/environment-variables
+
+Your DATABASE_URL should look like:
+postgresql://username:password@host.region.provider.com:5432/database
+`;
+    console.error(errorMsg);
+    throw new Error("DATABASE_URL environment variable is required");
   }
-});
 
-// Initialize Prisma client with proper error handling
-let db: PrismaClient;
-
-try {
-  // In production, always create a new instance
-  // In development, use global instance for hot reloading
-  if (process.env.NODE_ENV === "production") {
-    db = new PrismaClient({
-      log: ['error', 'warn'],
-    });
-  } else {
-    if (!global.__prisma) {
-      global.__prisma = new PrismaClient({
-        log: ['query', 'error', 'warn'],
-      });
+  const client = new PrismaClient({
+    log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error', 'warn'],
+    datasources: {
+      db: {
+        url: process.env.DATABASE_URL
+      }
     }
-    db = global.__prisma;
-  }
-  
+  });
+
   console.log("✅ Prisma client initialized successfully");
-} catch (error) {
-  console.error("❌ Failed to initialize Prisma client:", error);
-  throw new Error("Database initialization failed. Please check your DATABASE_URL environment variable.");
+  return client;
 }
 
-export { db };
+// Lazy getter for database connection
+export const db = new Proxy({} as PrismaClient, {
+  get(target, prop) {
+    if (!_db) {
+      if (process.env.NODE_ENV === "production") {
+        _db = createPrismaClient();
+      } else {
+        // In development, use global instance for hot reloading
+        if (!global.__prisma) {
+          global.__prisma = createPrismaClient();
+        }
+        _db = global.__prisma;
+      }
+    }
+    return _db[prop as keyof PrismaClient];
+  }
+});

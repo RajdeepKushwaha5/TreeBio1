@@ -1,7 +1,7 @@
 # 🌳 TreeBio
 
 <div align="center">
-  <img src="https://treebio1.vercel.app/favicon.svg" alt="TreeBio Logo" width="64" height="64">
+  <img src="https://treebio1.vercel.app/favicon.svg" alt="TreeBio Logo" width="80" height="80">
   
   **A Modern Bio Link Platform for the Digital Age**
   
@@ -9,471 +9,200 @@
   [![Next.js](https://img.shields.io/badge/Next.js-15.5.2-black?logo=next.js)](https://nextjs.org/)
   [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?logo=typescript)](https://www.typescriptlang.org/)
   [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?logo=tailwind-css)](https://tailwindcss.com/)
-  [![Prisma](https://img.shields.io/badge/Prisma-Latest-2D3748?logo=prisma)](https://www.prisma.io/)
-  [![Vercel](https://img.shields.io/badge/Deployed_on-Vercel-000000?logo=vercel)](https://vercel.com)
   [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 </div>
 
-## 🎯 Overview
+## 📖 Description
 
-**TreeBio** is a powerful, modern bio link platform that transforms the way you showcase your digital presence. Create stunning, customizable profile pages with unlimited links, real-time analytics, QR codes, URL shortening, and much more—all in one seamless platform.
+TreeBio is a powerful, modern bio link platform that transforms the way you showcase your digital presence. Create stunning, customizable profile pages with unlimited links, real-time analytics, QR codes, URL shortening, and advanced customization options—all in one seamless platform designed for content creators, entrepreneurs, and businesses.
 
-**🌟 Perfect for:** Content creators, entrepreneurs, influencers, businesses, freelancers, and anyone who wants to consolidate their online presence into one beautiful, professional page.
+## �️ Tech Stack
 
-### 🚀 **Live Demo**: [treebio1.vercel.app](https://treebio1.vercel.app)
+- **Frontend**: Next.js 15.5.2, React, TypeScript, Tailwind CSS
+- **Backend**: Next.js API Routes, Prisma ORM
+- **Database**: PostgreSQL (Neon)
+- **Authentication**: Clerk
+- **Deployment**: Vercel
+- **Real-time**: Pusher
+- **UI Components**: Radix UI, Lucide React
 
----
+## ✨ Features
 
-## ✨ Key Features
+- **🔗 Smart Link Management**: Unlimited links with categories, scheduling, and custom icons
+- **📊 Real-time Analytics**: Comprehensive tracking with geographic insights and device analytics
+- **🎨 Advanced Customization**: Professional themes, custom colors, and mobile-first design
+- **🛠️ Professional Tools**: Built-in URL shortener, QR code generator, and bulk import/export
+- **🔐 Secure Authentication**: User management with privacy controls and GDPR compliance
 
-### 🔗 **Smart Link Management**
-- **Unlimited Links**: Add as many links as you need
-- **Link Categories**: Organize with custom collections
-- **Smart Scheduling**: Set start/end dates for temporary links
-- **Drag & Drop Reordering**: Easy link management
-- **Custom Icons**: 1000+ icons or upload your own
-- **Click Analytics**: Track performance for each link
-
-### 🎨 **Advanced Customization**
-- **Professional Themes**: Beautiful pre-built designs
-- **Custom Theme Builder**: Create unique color schemes
-- **Custom Domains**: Use your own domain (coming soon)
-- **Profile Personalization**: Avatar, bio, social links
-- **Mobile-First Design**: Perfect on all devices
-
-### 📊 **Powerful Analytics**
-- **Real-Time Tracking**: Live visitor analytics
-- **Geographic Insights**: See where your visitors are from
-- **Device Analytics**: Desktop vs mobile breakdown
-- **Click Heatmaps**: Visual representation of link performance
-- **Time-Based Reports**: Daily, weekly, monthly trends
-- **Export Data**: Download your analytics as CSV
-
-### 🛠️ **Professional Tools**
-- **URL Shortener**: Built-in link shortening with analytics
-- **QR Code Generator**: Instant QR codes for any link
-- **Bulk Link Import**: CSV import for easy migration
-- **API Access**: Full REST API for integrations
-- **SEO Optimized**: Meta tags and social sharing
-
-### 🔐 **Security & Privacy**
-- **Secure Authentication**: Powered by Clerk
-- **Privacy Controls**: Public/private profiles
-- **GDPR Compliant**: Privacy-focused analytics
-- **SSL Secured**: HTTPS by default
-- **Data Protection**: Your data, your control
-
----
-
-## 🛠️ Technology Stack
-
-### **Frontend & Backend**
-- **Next.js 15.5.2** - React framework with App Router
-- **TypeScript** - Type-safe development
-- **Tailwind CSS** - Utility-first CSS framework
-- **Radix UI** - Accessible components
-- **Prisma** - Type-safe database ORM
-
-### **Database & Infrastructure**
-- **PostgreSQL** - Reliable, scalable database
-- **Vercel** - Edge deployment platform
-- **Clerk** - Authentication & user management
-- **Pusher** - Real-time features
-
-### **Tools & Libraries**
-- **QRCode.js** - QR code generation
-- **Chart.js** - Data visualization
-- **React Hook Form** - Form handling
-- **Zod** - Schema validation
-- **Lucide React** - Beautiful icons
-
----
-
-## 🚀 Quick Start Guide
+## 🚀 Installation
 
 ### Prerequisites
-- **Node.js 18+** 
-- **PostgreSQL database**
-- **Git**
 
-### 1. Clone the Repository
-```bash
-git clone https://github.com/RajdeepKushwaha5/TreeBio1.git
-cd TreeBio1
+- Node.js 18.0 or higher
+- PostgreSQL database
+- Git
+
+### Steps
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/RajdeepKushwaha5/TreeBio1.git
+   cd TreeBio1
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Set up environment variables**
+   
+   Create a `.env.local` file in the root directory:
+   ```env
+   # Database
+   DATABASE_URL="postgresql://username:password@localhost:5432/treebio"
+   
+   # Clerk Authentication
+   NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY="your_clerk_publishable_key"
+   CLERK_SECRET_KEY="your_clerk_secret_key"
+   NEXT_PUBLIC_CLERK_SIGN_IN_URL="/sign-in"
+   NEXT_PUBLIC_CLERK_SIGN_UP_URL="/sign-up"
+   
+   # App Configuration
+   NEXT_PUBLIC_APP_URL="http://localhost:3000"
+   NEXT_PUBLIC_APP_NAME="TreeBio"
+   
+   # Pusher (Real-time features)
+   NEXT_PUBLIC_PUSHER_APP_KEY="your_pusher_key"
+   PUSHER_APP_ID="your_app_id"
+   PUSHER_SECRET="your_secret"
+   NEXT_PUBLIC_PUSHER_CLUSTER="your_cluster"
+   ```
+
+4. **Set up the database**
+   ```bash
+   npx prisma generate
+   npx prisma db push
+   ```
+
+5. **Start the development server**
+   ```bash
+   npm run dev
+   ```
+
+6. **Open your browser**
+   
+   Visit [http://localhost:3000](http://localhost:3000) to see TreeBio running locally.
+
+## 🎯 Usage
+
+1. **Create Account**: Sign up using the authentication system
+2. **Setup Profile**: Add your avatar, bio, and personal information
+3. **Add Links**: Create and organize your important links
+4. **Customize**: Choose themes and customize your page design
+5. **Share**: Share your TreeBio profile URL with your audience
+6. **Monitor**: Track performance with built-in analytics
+
+### Example Profile URL
+```
+https://treebio1.vercel.app/yourusername
 ```
 
-### 2. Install Dependencies
-```bash
-npm install
-```
+## ⚙️ Configuration
 
-### 3. Environment Setup
-Create a `.env.local` file:
+### Environment Variables
 
-```env
-# Database Configuration
-DATABASE_URL="postgresql://username:password@localhost:5432/treebio"
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `DATABASE_URL` | PostgreSQL connection string | Yes |
+| `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | Clerk publishable key | Yes |
+| `CLERK_SECRET_KEY` | Clerk secret key | Yes |
+| `NEXT_PUBLIC_APP_URL` | Your app's URL | Yes |
+| `NEXT_PUBLIC_PUSHER_APP_KEY` | Pusher app key | Optional |
 
-# Clerk Authentication (Get from https://clerk.dev)
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY="pk_test_your_key_here"
-CLERK_SECRET_KEY="sk_test_your_secret_here"
-NEXT_PUBLIC_CLERK_SIGN_IN_URL="/sign-in"
-NEXT_PUBLIC_CLERK_SIGN_UP_URL="/sign-up"
+### Database Setup
 
-# App Configuration  
-NEXT_PUBLIC_APP_URL="http://localhost:3000"
-NEXT_PUBLIC_APP_NAME="TreeBio"
-
-# Pusher (Real-time features)
-NEXT_PUBLIC_PUSHER_APP_KEY="your_pusher_key"
-PUSHER_APP_ID="your_app_id" 
-PUSHER_SECRET="your_secret"
-NEXT_PUBLIC_PUSHER_CLUSTER="your_cluster"
-
-# Optional: Analytics
-NEXT_PUBLIC_GA_ID="G-XXXXXXXXXX"
-```
-
-### 4. Database Setup
-```bash
-# Generate Prisma client
-npx prisma generate
-
-# Push schema to database
-npx prisma db push
-
-# (Optional) Seed with sample data
-npx prisma db seed
-```
-
-### 5. Start Development Server
-```bash
-npm run dev
-```
-
-🎉 **Visit `http://localhost:3000` to see TreeBio running locally!**
-
----
-
-## 📁 Project Structure
-
-```
-TreeBio1/
-├── app/                          # Next.js 15 App Router
-│   ├── (auth)/                   # Authentication pages
-│   │   ├── sign-in/              # Login page
-│   │   └── sign-up/              # Registration page
-│   ├── (home)/                   # Public homepage
-│   ├── (profile)/                # User profile pages
-│   ├── admin/                    # Dashboard & Admin
-│   │   ├── analytics/            # Analytics dashboard
-│   │   ├── collections/          # Link collections
-│   │   ├── my-tree/              # Profile management
-│   │   ├── overview/             # Main dashboard
-│   │   ├── settings/             # User settings
-│   │   └── tools/                # QR codes, shortener
-│   ├── api/                      # API Routes
-│   │   ├── archive/              # Archive functionality
-│   │   ├── collections/          # Collections API
-│   │   ├── dashboard/            # Dashboard data
-│   │   ├── debug/                # Debug endpoints
-│   │   ├── health/               # Health checks
-│   │   ├── links/                # Link management
-│   │   ├── profile/              # Profile API
-│   │   ├── settings/             # Settings API
-│   │   ├── shortener/            # URL shortener
-│   │   └── social-links/         # Social media links
-│   ├── s/                        # Short URL redirects
-│   └── templates/                # Profile templates
-├── components/                   # React Components
-│   ├── ui/                       # Reusable UI components
-│   ├── analytics/                # Analytics components
-│   ├── content-editor.tsx        # Rich content editor
-│   ├── qr-code-generator.tsx     # QR code features
-│   ├── link-shortener-monitor.tsx # URL shortener
-│   └── ...                       # Other components
-├── lib/                          # Core Libraries
-│   ├── db.ts                     # Database connection
-│   ├── auth.ts                   # Authentication utils
-│   ├── analytics.ts              # Analytics logic
-│   └── utils.ts                  # Utility functions
-├── hooks/                        # Custom React hooks
-├── modules/                      # Feature modules
-├── prisma/                       # Database schema
-├── public/                       # Static assets
-└── styles/                       # Global styles
-```
-
----
+TreeBio uses Prisma as the ORM. The database schema includes:
+- Users and authentication
+- Links and collections
+- Analytics and tracking
+- URL shortener data
 
 ## 🔌 API Documentation
 
-### Authentication Endpoints
-```http
-GET  /api/health                 # Health check
-GET  /api/debug/env              # Environment check
-POST /api/profile                # User profile management
-```
+TreeBio provides RESTful API endpoints for all major functionality:
 
-### Link Management
-```http
-GET    /api/links                # Get all user links
-POST   /api/links                # Create new link
-PUT    /api/links/update         # Update existing link
-DELETE /api/links/:id            # Delete link
-```
-
-### Collections
-```http
-GET  /api/collections            # Get user collections
-POST /api/collections            # Create collection
-GET  /api/collections/links      # Get collection links
-```
-
-### URL Shortener
-```http
-POST /api/shortener              # Create short URL
-GET  /api/shortener              # Get all short URLs
-GET  /api/shortener/:code        # Redirect short URL
-GET  /api/shortener/:code/stats  # Get URL statistics
-```
-
-### Analytics
-```http
-GET /api/dashboard               # Dashboard analytics
-GET /api/dashboard/realtime      # Real-time data
-```
+### Core Endpoints
+- `GET /api/health` - Health check
+- `GET /api/profile` - Get user profile
+- `POST /api/links` - Create new link
+- `GET /api/analytics` - Get analytics data
+- `POST /api/shortener` - Create short URL
 
 ### Debug Endpoints
-```http
-GET /api/debug/database          # Database connection test
-GET /api/debug/test-db          # Database query test
-GET /api/debug/onboarding       # User onboarding check
-```
+- `GET /api/debug/database` - Database connection test
+- `GET /api/debug/env` - Environment variables check
 
----
+For complete API documentation, run the application locally and visit the debug endpoints.
 
-## 🚀 Deployment Guide
+## 🚀 Deployment
 
 ### Deploy to Vercel (Recommended)
 
-TreeBio is optimized for Vercel deployment:
+1. **Fork this repository** to your GitHub account
 
-1. **Fork & Import**: Fork this repository and import to Vercel
-2. **Environment Variables**: Add all environment variables from your `.env.local`
-3. **Database**: Set up PostgreSQL (Vercel Postgres, Supabase, or Neon)
-4. **Deploy**: Click deploy!
+2. **Import to Vercel**
+   - Go to [Vercel Dashboard](https://vercel.com/dashboard)
+   - Click "New Project"
+   - Import your forked repository
 
-```bash
-# Quick deploy with Vercel CLI
-npm i -g vercel
-vercel --prod
-```
+3. **Set Environment Variables**
+   - Add all variables from your `.env.local` file
+   - Set `DATABASE_URL` to your production database
+   - Configure Clerk with production keys
 
-### Production Environment Variables
-```env
-# Production Database (example with Neon)
-DATABASE_URL="postgresql://user:pass@host.neon.tech/dbname?sslmode=require"
-
-# Production Clerk Keys
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY="pk_live_..."
-CLERK_SECRET_KEY="sk_live_..."
-
-# Production App URL
-NEXT_PUBLIC_APP_URL="https://treebio1.vercel.app"
-```
+4. **Deploy**
+   - Click "Deploy"
+   - Your TreeBio instance will be live in minutes
 
 ### Other Platforms
 
-#### Netlify
-```bash
-npm run build
-# Deploy the .next folder
-```
-
-#### Railway
-```bash
-# Connect your GitHub repo to Railway
-# Set environment variables
-# Deploy automatically
-```
-
-#### Docker
-```dockerfile
-FROM node:18-alpine
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci --only=production
-COPY . .
-RUN npm run build
-EXPOSE 3000
-CMD ["npm", "start"]
-```
-
----
-
-## 🎯 Usage Examples
-
-### Creating Your First Bio Link
-```typescript
-// 1. Sign up at your deployed TreeBio instance
-// 2. Complete your profile setup
-// 3. Add your first links
-
-const profileData = {
-  username: "yourhandle",
-  displayName: "Your Name", 
-  bio: "Your bio description",
-  avatar: "profile-image.jpg",
-  theme: "modern-dark"
-}
-```
-
-### Adding Links Programmatically
-```typescript
-// Using the API
-const newLink = await fetch('/api/links', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    title: "My Portfolio",
-    url: "https://portfolio.com",
-    description: "Check out my work",
-    isActive: true
-  })
-});
-```
-
-### Analytics Data Structure
-```typescript
-interface AnalyticsData {
-  totalClicks: number;
-  totalViews: number;
-  topLinks: Array<{
-    title: string;
-    clicks: number;
-    url: string;
-  }>;
-  geographic: Array<{
-    country: string;
-    visits: number;
-  }>;
-  devices: {
-    mobile: number;
-    desktop: number;
-    tablet: number;
-  };
-}
-```
-
----
+TreeBio can also be deployed to:
+- Railway
+- Heroku
+- DigitalOcean App Platform
+- AWS Amplify
 
 ## 🤝 Contributing
 
-We welcome contributions from the community! Here's how you can help:
+Contributions are welcome! Here's how you can help:
 
-### Getting Started
-1. **Fork** the repository
-2. **Clone** your fork: `git clone https://github.com/yourusername/TreeBio1.git`
-3. **Create** a branch: `git checkout -b feature/amazing-feature`
-4. **Make** your changes
-5. **Test** thoroughly: `npm test`
-6. **Commit**: `git commit -m 'Add amazing feature'`
-7. **Push**: `git push origin feature/amazing-feature`
-8. **Open** a Pull Request
+1. **Fork the repository**
+2. **Create a feature branch** (`git checkout -b feature/amazing-feature`)
+3. **Make your changes**
+4. **Commit your changes** (`git commit -m 'Add amazing feature'`)
+5. **Push to the branch** (`git push origin feature/amazing-feature`)
+6. **Open a Pull Request**
 
-### Development Guidelines
-- **Code Style**: Follow the existing TypeScript/React patterns
-- **Testing**: Add tests for new features
-- **Documentation**: Update README and code comments
-- **Commits**: Use conventional commit messages
+### Guidelines
+- Follow the existing code style
+- Add tests for new features
+- Update documentation as needed
+- Use conventional commit messages
 
-### Areas for Contribution
-- 🎨 **New themes and customization options**
-- 📊 **Advanced analytics features**
-- 🔧 **Performance optimizations**
-- 🌐 **Internationalization (i18n)**
-- 📱 **Mobile app development**
-- 🔌 **Third-party integrations**
-
----
-
-## 🐛 Troubleshooting
-
-### Common Issues
-
-#### Database Connection Issues
-```bash
-# Check database connection
-curl https://treebio1.vercel.app/api/debug/database
-
-# Verify environment variables
-curl https://treebio1.vercel.app/api/debug/env
-```
-
-#### Build Failures
-```bash
-# Clear Next.js cache
-rm -rf .next
-
-# Reinstall dependencies
-rm -rf node_modules package-lock.json
-npm install
-
-# Check for TypeScript errors
-npm run build
-```
-
-#### Authentication Issues
-1. Verify Clerk keys in environment variables
-2. Check Clerk dashboard configuration
-3. Ensure redirect URLs are correct
-
-### Getting Help
-- 🐛 **Bug Reports**: [GitHub Issues](https://github.com/RajdeepKushwaha5/TreeBio1/issues)
-- 💬 **Discussions**: [GitHub Discussions](https://github.com/RajdeepKushwaha5/TreeBio1/discussions)
-- 📧 **Email**: Contact through GitHub
-
----
-
-## 📊 Project Status & Roadmap
-
-### ✅ Current Features (v1.0)
-- [x] **User Authentication** - Secure login/signup
-- [x] **Profile Management** - Complete profile customization
-- [x] **Link Management** - Unlimited links with analytics
-- [x] **URL Shortener** - Built-in link shortening
-- [x] **QR Code Generator** - Instant QR codes
-- [x] **Real-time Analytics** - Comprehensive tracking
-- [x] **Theme System** - Multiple beautiful themes
-- [x] **Responsive Design** - Mobile-first approach
-- [x] **Collections** - Organize links in groups
-- [x] **Admin Dashboard** - Complete management interface
-
-### 🔄 In Development (v1.1)
-- [ ] **Custom Domains** - Use your own domain
-- [ ] **Advanced Analytics** - Conversion tracking
-- [ ] **A/B Testing** - Test different link arrangements
-- [ ] **Team Collaboration** - Multi-user profiles
-- [ ] **API v2** - Enhanced API with webhooks
-
-### 🎯 Future Plans (v2.0)
-- [ ] **Mobile App** - Native iOS/Android apps
-- [ ] **White Label** - Branded solutions for agencies
-- [ ] **E-commerce Integration** - Sell products directly
-- [ ] **Social Media Scheduling** - Content management
-- [ ] **Email Marketing** - Built-in newsletter features
-
----
+### Reporting Issues
+- Use [GitHub Issues](https://github.com/RajdeepKushwaha5/TreeBio1/issues) to report bugs
+- Include steps to reproduce
+- Specify your environment details
 
 ## 📜 License
 
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ```
 MIT License
 
-Copyright (c) 2025 TreeBio - Rajdeep Kushwaha
+Copyright (c) 2025 Rajdeep Kushwaha
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -484,70 +213,40 @@ furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
 ```
 
----
+## 🙏 Acknowledgments
 
-## 👨‍💻 About the Author
+- **Next.js Team** for the amazing React framework
+- **Vercel** for seamless deployment platform
+- **Clerk** for authentication services
+- **Prisma** for the excellent ORM
+- **Tailwind CSS** for the utility-first CSS framework
+
+## 👨‍💻 Author
 
 <div align="center">
   <img src="https://github.com/RajdeepKushwaha5.png" alt="Rajdeep Kushwaha" width="100" height="100" style="border-radius: 50%;">
   
-  ### **Rajdeep Kushwaha**
+  **Rajdeep Kushwaha**
   
   *Full-Stack Developer & Open Source Enthusiast*
-  
-  Building modern web applications with cutting-edge technologies.
-  Passionate about creating tools that empower digital creators.
 
   [![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/RajdeepKushwaha5)
   [![X](https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/rajdeeptwts)
   [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/rajdeep-singh-b658a833a/)
   [![Medium](https://img.shields.io/badge/Medium-12100E?style=for-the-badge&logo=medium&logoColor=white)](https://medium.com/@rajdeep01)
-
 </div>
 
-### 🎯 **My Mission**
-To create powerful, accessible tools that help people showcase their digital presence and build meaningful online connections.
-
-### 💼 **Other Projects**
-- 🔗 **TreeBio** - This bio link platform
-- 🚀 **Coming Soon** - More exciting projects!
-
 ---
-
-## 🌟 Show Your Support
-
-If TreeBio has helped you create an amazing bio link page, please consider:
-
-- ⭐ **Starring this repository**
-- 🍴 **Forking and contributing**
-- 🐛 **Reporting bugs or requesting features**
-- 💬 **Sharing with your network**
-- ☕ **Buying me a coffee** (coming soon)
 
 <div align="center">
   
-### 🚀 Ready to create your TreeBio? 
-
-[![Get Started](https://img.shields.io/badge/🌳_Get_Started-treebio1.vercel.app-brightgreen?style=for-the-badge)](https://treebio1.vercel.app)
-[![View Source](https://img.shields.io/badge/📝_View_Source-GitHub-black?style=for-the-badge&logo=github)](https://github.com/RajdeepKushwaha5/TreeBio1)
-[![Report Issue](https://img.shields.io/badge/🐛_Report_Issue-GitHub_Issues-orange?style=for-the-badge&logo=github)](https://github.com/RajdeepKushwaha5/TreeBio1/issues)
-
----
-
-**Made with ❤️ by [Rajdeep Kushwaha](https://github.com/RajdeepKushwaha5)**
-
-*TreeBio - Grow your digital presence, one link at a time* 🌳
-
+  **🌟 If this project helped you, please consider giving it a star!**
+  
+  [![Live Demo](https://img.shields.io/badge/🚀_Try_TreeBio-treebio1.vercel.app-brightgreen?style=for-the-badge)](https://treebio1.vercel.app)
+  
+  *Made with ❤️ by Rajdeep Kushwaha*
 </div>
 - **Profile Customization**: Avatar, bio, social links
 - **Responsive Design**: Optimized for all devices

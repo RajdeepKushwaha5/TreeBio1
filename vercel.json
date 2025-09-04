@@ -1,4 +1,9 @@
 {
-  "buildCommand": "npm run build:vercel",
-  "installCommand": "npm ci && npx prisma generate"
+  "buildCommand": "npm run build",
+  "installCommand": "npm ci && npx prisma generate",
+  "functions": {
+    "app/api/**/*.{js,ts}": {
+      "runtime": "nodejs18.x"
+    }
+  }
 }

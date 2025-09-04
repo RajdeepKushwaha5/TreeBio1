@@ -3,9 +3,11 @@ import { onBoardUser } from "@/modules/auth/actions";
 import ClaimLinkForm from "@/modules/home/components/claim-link-form";
 import { getCurrentUsername } from "@/modules/profile/actions";
 
-
 import Link from "next/link";
 import { redirect } from "next/navigation";
+
+// Force dynamic rendering since this page uses authentication
+export const dynamic = 'force-dynamic';
 
 export default async function Home() {
   try {

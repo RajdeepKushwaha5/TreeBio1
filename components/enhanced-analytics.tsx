@@ -80,14 +80,22 @@ export default function EnhancedAnalytics({ userId, timeRange = '30d' }: Enhance
       const response = await fetch(`/api/analytics/enhanced?timeRange=${selectedTimeRange}`);
       const result = await response.json();
       
+      console.log('Analytics API response:', { 
+        status: response.status, 
+        success: result.success, 
+        error: result.error,
+        details: result.details
+      });
+      
       if (result.success) {
         setAnalyticsData(result.data);
       } else {
-        throw new Error(result.error || 'Failed to load analytics');
+        console.error('Analytics API error:', result.error);
+        toast.error(`Failed to load analytics data: ${result.details || result.error}`);
       }
     } catch (error) {
       console.error('Analytics loading error:', error);
-      toast.error('Failed to load analytics data');
+      toast.error(`Failed to load analytics data: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);

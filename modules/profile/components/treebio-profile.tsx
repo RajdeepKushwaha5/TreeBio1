@@ -24,6 +24,7 @@ import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import { logLinkClick } from "@/modules/analytics/actions";
 import { SocialPlatformService } from "@/lib/social-platforms";
+import { useUser } from '@clerk/nextjs';
 
 
 interface LinkItem {
@@ -84,10 +85,22 @@ const getSocialIcon = (platform: string) => {
 
 export default function TreeBioProfile({ profileData }: TreeBioProfileProps) {
   const router = useRouter();
+  const { user } = useUser();
   const [isCopied, setIsCopied] = React.useState(false);
   const [linkClicks, setLinkClicks] = React.useState<{ [key: string]: number }>({});
+  const [currentProfileData, setCurrentProfileData] = React.useState(profileData);
   const { theme, setTheme } = useTheme();
   const origin = typeof window !== "undefined" ? window.location.origin : "";
+
+  // Check if this is the current user's own bio page
+  const isOwnProfile = user?.id === profileData?.id;
+
+  console.log('TreeBioProfile - Profile info:', { 
+    currentUserId: user?.id,
+    profileUserId: profileData?.id,
+    isOwnProfile,
+    linksCount: currentProfileData?.links?.length || 0
+  });
 
   const onCopy = () => {
     if (profileData) {
@@ -97,16 +110,37 @@ export default function TreeBioProfile({ profileData }: TreeBioProfileProps) {
     }
   };
 
+  // Auto-refresh data for own profile
+  React.useEffect(() => {
+    if (isOwnProfile && profileData?.username) {
+      const refreshInterval = setInterval(async () => {
+        try {
+          const response = await fetch(`/api/profile/${profileData.username}`);
+          if (response.ok) {
+            const data = await response.json();
+            if (data.success && data.user) {
+              setCurrentProfileData(data.user);
+              console.log('Bio page data refreshed:', data.user.links?.length || 0, 'links');
+            }
+          }
+        } catch (error) {
+          console.error('Error refreshing bio page data:', error);
+        }
+      }, 5000); // Refresh every 5 seconds for own profile
+
+      return () => clearInterval(refreshInterval);
+    }
+  }, [isOwnProfile, profileData?.username]);
 
   React.useEffect(() => {
-    if (profileData?.links) {
-      const initialClicks = profileData.links.reduce((acc, link) => {
+    if (currentProfileData?.links) {
+      const initialClicks = currentProfileData.links.reduce((acc: { [key: string]: number }, link: any) => {
         acc[link.id] = link.clickCount;
         return acc;
       }, {} as { [key: string]: number });
       setLinkClicks(initialClicks);
     }
-  }, [profileData?.links]);
+  }, [currentProfileData?.links]);
 
 
   const handleLinkClick = async (linkId: string, url: string, event: React.MouseEvent) => {
@@ -262,7 +296,7 @@ export default function TreeBioProfile({ profileData }: TreeBioProfileProps) {
 
           {/* Links Section */}
           <div className="space-y-3 mb-8 relative z-10">
-            {profileData.links.map((link) => {
+            {currentProfileData?.links?.map((link: any) => {
               const PlatformIcon = SocialPlatformService.getPlatformIconFromUrl(link.url);
               
               return (
@@ -321,7 +355,7 @@ export default function TreeBioProfile({ profileData }: TreeBioProfileProps) {
           {/* Social Links */}
           {profileData.socialLinks && profileData.socialLinks.length > 0 && (
             <div className="flex justify-center space-x-3 mb-8 relative z-10">
-              {profileData.socialLinks.map((socialLink) => (
+              {currentProfileData?.socialLinks?.map((socialLink: any) => (
                 <Button
                   key={socialLink.id}
 

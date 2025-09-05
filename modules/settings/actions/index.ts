@@ -1,8 +1,5 @@
-"use server";
-
-import { db } from "@/lib/db";
-import { currentUser } from "@clerk/nextjs/server";
-import { revalidatePath } from "next/cache";
+// Client-side utilities for settings management
+// Removed "use server" directive to prevent Server Actions issues in Codespaces
 
 export interface ProfileData {
   firstName: string | null;
@@ -47,40 +44,35 @@ export interface SettingsData {
   privacy: PrivacySettings;
 }
 
-// Get current user settings
+// Get current user settings via API
 export const getUserSettings = async (): Promise<{ success: boolean; data?: SettingsData; error?: string }> => {
   try {
-    const user = await currentUser();
-    
-    if (!user) {
-      return { success: false, error: "No authenticated user found" };
-    }
-
-    const dbUser = await db.user.findUnique({
-      where: { clerkId: user.id },
-      select: {
-        id: true,
-        firstName: true,
-        lastName: true,
-        username: true,
-        email: true,
-        bio: true,
-        imageUrl: true,
+    const response = await fetch('/api/settings', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
       },
     });
 
-    if (!dbUser) {
-      return { success: false, error: "User not found in database" };
+    if (!response.ok) {
+      return { success: false, error: `HTTP error! status: ${response.status}` };
     }
 
+    const result = await response.json();
+    
+    if (!result.success) {
+      return { success: false, error: result.error || "Failed to fetch settings" };
+    }
+
+    const user = result.user;
     const settingsData: SettingsData = {
       profile: {
-        firstName: dbUser.firstName,
-        lastName: dbUser.lastName,
-        username: dbUser.username,
-        email: dbUser.email,
-        bio: dbUser.bio,
-        imageUrl: dbUser.imageUrl,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        username: user.username,
+        email: user.email || null,
+        bio: user.bio,
+        imageUrl: user.imageUrl,
       },
       security: {
         twoFactorEnabled: false, // Default values - would be stored in separate table
@@ -94,7 +86,7 @@ export const getUserSettings = async (): Promise<{ success: boolean; data?: Sett
         marketingEmails: false,
       },
       privacy: {
-        profileVisibility: true,
+        profileVisibility: user.isPublic || true,
         analyticsTracking: true,
         dataCollection: true,
       },
@@ -107,47 +99,30 @@ export const getUserSettings = async (): Promise<{ success: boolean; data?: Sett
   }
 };
 
-// Update profile information
+// Update profile information via API
 export const updateProfile = async (profileData: Partial<ProfileData>): Promise<{ success: boolean; message: string }> => {
   try {
-    const user = await currentUser();
-    
-    if (!user) {
-      return { success: false, message: "No authenticated user found" };
-    }
-
-    const updateData: Record<string, string | null> = {};
-    if (profileData.firstName !== undefined) updateData.firstName = profileData.firstName;
-    if (profileData.lastName !== undefined) updateData.lastName = profileData.lastName;
-    if (profileData.username !== undefined) updateData.username = profileData.username;
-    if (profileData.bio !== undefined) updateData.bio = profileData.bio;
-
-    // Check if username is already taken
-    if (profileData.username) {
-      const existingUser = await db.user.findFirst({
-        where: {
-          username: profileData.username,
-          clerkId: { not: user.id }
-        }
-      });
-      
-      if (existingUser) {
-        return { success: false, message: "Username is already taken" };
-      }
-    }
-
-    await db.user.update({
-      where: { clerkId: user.id },
-      data: updateData,
+    const response = await fetch('/api/settings/update', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ type: 'profile', data: profileData }),
     });
 
-    revalidatePath("/admin/settings");
-    return { success: true, message: "Profile updated successfully" };
+    if (!response.ok) {
+      return { success: false, message: `HTTP error! status: ${response.status}` };
+    }
+
+    const result = await response.json();
+    
+    if (!result.success) {
+      return { success: false, message: result.error || "Failed to update profile" };
+    }
+
+    return { success: true, message: result.message || "Profile updated successfully" };
   } catch (error) {
     console.error("Error updating profile:", error);
-    if (error instanceof Error && error.message.includes('Unique constraint')) {
-      return { success: false, message: "Username is already taken" };
-    }
     return { success: false, message: "Failed to update profile" };
   }
 };
@@ -155,17 +130,12 @@ export const updateProfile = async (profileData: Partial<ProfileData>): Promise<
 // Update security settings (mock implementation for now)
 export const updateSecuritySettings = async (securityData: Partial<SecuritySettings>): Promise<{ success: boolean; message: string }> => {
   try {
-    const user = await currentUser();
-    
-    if (!user) {
-      return { success: false, message: "No authenticated user found" };
-    }
-
     // In a real implementation, these would be stored in a UserSettings table
-    // For now, we'll just simulate the update
     console.log("Updating security settings:", securityData);
+    
+    // Simulate API call delay
+    await new Promise(resolve => setTimeout(resolve, 500));
 
-    revalidatePath("/admin/settings");
     return { success: true, message: "Security settings updated successfully" };
   } catch (error) {
     console.error("Error updating security settings:", error);
@@ -176,16 +146,12 @@ export const updateSecuritySettings = async (securityData: Partial<SecuritySetti
 // Update notification settings (mock implementation for now)
 export const updateNotificationSettings = async (notificationData: Partial<NotificationSettings>): Promise<{ success: boolean; message: string }> => {
   try {
-    const user = await currentUser();
-    
-    if (!user) {
-      return { success: false, message: "No authenticated user found" };
-    }
-
     // In a real implementation, these would be stored in a UserSettings table
     console.log("Updating notification settings:", notificationData);
+    
+    // Simulate API call delay
+    await new Promise(resolve => setTimeout(resolve, 500));
 
-    revalidatePath("/admin/settings");
     return { success: true, message: "Notification settings updated successfully" };
   } catch (error) {
     console.error("Error updating notification settings:", error);
@@ -196,16 +162,12 @@ export const updateNotificationSettings = async (notificationData: Partial<Notif
 // Update privacy settings (mock implementation for now)
 export const updatePrivacySettings = async (privacyData: Partial<PrivacySettings>): Promise<{ success: boolean; message: string }> => {
   try {
-    const user = await currentUser();
-    
-    if (!user) {
-      return { success: false, message: "No authenticated user found" };
-    }
-
     // In a real implementation, these would be stored in a UserSettings table
     console.log("Updating privacy settings:", privacyData);
+    
+    // Simulate API call delay
+    await new Promise(resolve => setTimeout(resolve, 500));
 
-    revalidatePath("/admin/settings");
     return { success: true, message: "Privacy settings updated successfully" };
   } catch (error) {
     console.error("Error updating privacy settings:", error);
@@ -213,22 +175,27 @@ export const updatePrivacySettings = async (privacyData: Partial<PrivacySettings
   }
 };
 
-// Get active sessions (placeholder - would integrate with Clerk)
+// Get active sessions via API
 export const getActiveSessions = async (): Promise<{ success: boolean; data?: SessionData[]; error?: string }> => {
   try {
-    // This would integrate with Clerk's session management
-    // For now, returning mock data
-    const sessions: SessionData[] = [
-      {
-        id: "current",
-        device: "Windows • Chrome",
-        location: "New York, US",
-        lastActive: new Date(),
-        isCurrent: true,
+    const response = await fetch('/api/settings/sessions', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
       },
-    ];
+    });
 
-    return { success: true, data: sessions };
+    if (!response.ok) {
+      return { success: false, error: `HTTP error! status: ${response.status}` };
+    }
+
+    const result = await response.json();
+    
+    if (!result.success) {
+      return { success: false, error: result.error || "Failed to fetch sessions" };
+    }
+
+    return { success: true, data: result.sessions };
   } catch (error) {
     console.error("Error fetching active sessions:", error);
     return { success: false, error: "Failed to fetch sessions" };
@@ -252,12 +219,6 @@ export const verifyCustomDomain = async (domain: string): Promise<{ success: boo
 // Delete user account (dangerous operation)
 export const deleteUserAccount = async (): Promise<{ success: boolean; message: string }> => {
   try {
-    const user = await currentUser();
-    
-    if (!user) {
-      return { success: false, message: "No authenticated user found" };
-    }
-
     // This would be a more complex operation involving:
     // 1. Deleting all user data
     // 2. Removing from Clerk

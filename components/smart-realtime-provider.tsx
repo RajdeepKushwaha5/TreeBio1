@@ -20,6 +20,8 @@ interface RealtimeContextType {
   addLink: (link: any) => Promise<void>;
   updateLink: (link: any) => Promise<void>;
   deleteLink: (linkId: string) => Promise<void>;
+  archiveLink: (linkId: string) => Promise<void>;
+  reorderLinks: (linkIds: string[]) => Promise<void>;
   addSocialLink: (socialLink: any) => Promise<void>;
   updateSocialLink: (socialLink: any) => Promise<void>;
   deleteSocialLink: (socialLinkId: string) => Promise<void>;
@@ -243,11 +245,9 @@ export function SmartRealtimeProvider({ children }: { children: React.ReactNode 
       const data = await response.json();
 
       // Update local state immediately for better UX
-      if (!isPusherAvailable) {
-        setLinks(prev => [...prev, data.link]);
-        setLastUpdate(new Date());
-        toast.success('Link added!');
-      }
+      setLinks(prev => [...prev, data.link]);
+      setLastUpdate(new Date());
+      toast.success('Link added!');
 
       return data;
     } catch (error) {
@@ -274,11 +274,9 @@ export function SmartRealtimeProvider({ children }: { children: React.ReactNode 
       const data = await response.json();
 
       // Update local state immediately for better UX
-      if (!isPusherAvailable) {
-        setLinks(prev => prev.map(l => l.id === link.id ? data.link : l));
-        setLastUpdate(new Date());
-        toast.success('Link updated!');
-      }
+      setLinks(prev => prev.map(l => l.id === link.id ? data.link : l));
+      setLastUpdate(new Date());
+      toast.success('Link updated!');
 
       return data;
     } catch (error) {
@@ -290,27 +288,79 @@ export function SmartRealtimeProvider({ children }: { children: React.ReactNode 
 
   const deleteLink = async (linkId: string) => {
     try {
-      const response = await fetch('/api/links', {
+      const response = await fetch(`/api/links?id=${linkId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ id: linkId }),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to delete link');
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to delete link');
       }
 
       // Update local state immediately for better UX
-      if (!isPusherAvailable) {
-        setLinks(prev => prev.filter(l => l.id !== linkId));
-        setLastUpdate(new Date());
-        toast.success('Link deleted!');
-      }
+      setLinks(prev => prev.filter(l => l.id !== linkId));
+      setLastUpdate(new Date());
+      toast.success('Link deleted!');
     } catch (error) {
       console.error('Error deleting link:', error);
       toast.error('Failed to delete link');
+      throw error;
+    }
+  };
+
+  const archiveLink = async (linkId: string) => {
+    try {
+      const response = await fetch('/api/archive', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ linkId }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to archive link');
+      }
+
+      // Update local state immediately - remove from active links
+      setLinks(prev => prev.filter(l => l.id !== linkId));
+      setLastUpdate(new Date());
+      toast.success('Link archived!');
+    } catch (error) {
+      console.error('Error archiving link:', error);
+      toast.error('Failed to archive link');
+      throw error;
+    }
+  };
+
+  const reorderLinks = async (linkIds: string[]) => {
+    try {
+      const response = await fetch('/api/links/reorder', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ linkIds }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to reorder links');
+      }
+
+      // Update local state immediately with new order
+      const reorderedLinks = linkIds.map(id => 
+        links.find(link => link.id === id)
+      ).filter(Boolean);
+      
+      setLinks(reorderedLinks);
+      setLastUpdate(new Date());
+      toast.success('Links reordered!');
+    } catch (error) {
+      console.error('Error reordering links:', error);
+      toast.error('Failed to reorder links');
       throw error;
     }
   };
@@ -332,11 +382,9 @@ export function SmartRealtimeProvider({ children }: { children: React.ReactNode 
       const data = await response.json();
 
       // Update local state immediately for better UX
-      if (!isPusherAvailable) {
-        setSocialLinks(prev => [...prev, data.socialLink]);
-        setLastUpdate(new Date());
-        toast.success('Social link added!');
-      }
+      setSocialLinks(prev => [...prev, data.socialLink]);
+      setLastUpdate(new Date());
+      toast.success('Social link added!');
 
       return data;
     } catch (error) {
@@ -363,11 +411,9 @@ export function SmartRealtimeProvider({ children }: { children: React.ReactNode 
       const data = await response.json();
 
       // Update local state immediately for better UX
-      if (!isPusherAvailable) {
-        setSocialLinks(prev => prev.map(l => l.id === socialLink.id ? data.socialLink : l));
-        setLastUpdate(new Date());
-        toast.success('Social link updated!');
-      }
+      setSocialLinks(prev => prev.map(l => l.id === socialLink.id ? data.socialLink : l));
+      setLastUpdate(new Date());
+      toast.success('Social link updated!');
 
       return data;
     } catch (error) {
@@ -392,11 +438,9 @@ export function SmartRealtimeProvider({ children }: { children: React.ReactNode 
       }
 
       // Update local state immediately for better UX
-      if (!isPusherAvailable) {
-        setSocialLinks(prev => prev.filter(l => l.id !== socialLinkId));
-        setLastUpdate(new Date());
-        toast.success('Social link deleted!');
-      }
+      setSocialLinks(prev => prev.filter(l => l.id !== socialLinkId));
+      setLastUpdate(new Date());
+      toast.success('Social link deleted!');
     } catch (error) {
       console.error('Error deleting social link:', error);
       toast.error('Failed to delete social link');
@@ -414,6 +458,8 @@ export function SmartRealtimeProvider({ children }: { children: React.ReactNode 
     addLink,
     updateLink,
     deleteLink,
+    archiveLink,
+    reorderLinks,
     addSocialLink,
     updateSocialLink,
     deleteSocialLink,

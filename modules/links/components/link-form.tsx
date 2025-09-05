@@ -26,9 +26,8 @@ import {
 } from "lucide-react";
 import { useUser } from "@clerk/nextjs";
 import { createUserProfile } from "@/modules/profile/actions";
-import { createLinkByUser, deleteLink, editLink, addSocialLink, deleteSocialLink, editSocialLink } from "../actions";
-import { archiveLink } from "@/modules/archive/actions/index";
 import { LinkCard, LinkFormWithPreview } from "./link-card";
+import { SortableLinksList } from "./sortable-links-list";
 import { SocialLinkModal, SocialLinkFormData } from "./social-link-modal"; // Import the modal
 import { useRealtime } from "@/components/smart-realtime-provider";
 
@@ -124,6 +123,7 @@ const LinkForm = ({ username, bio, link, socialLinks: initialSocialLinks = [] }:
     addLink,
     updateLink,
     deleteLink,
+    archiveLink,
     addSocialLink,
     updateSocialLink,
     deleteSocialLink,
@@ -153,13 +153,13 @@ const LinkForm = ({ username, bio, link, socialLinks: initialSocialLinks = [] }:
 
   // Update local state when real-time data changes
   React.useEffect(() => {
-    if (realtimeLinks?.length) {
+    if (realtimeLinks !== undefined) {
       setLinks(realtimeLinks);
     }
   }, [realtimeLinks]);
 
   React.useEffect(() => {
-    if (realtimeSocialLinks?.length) {
+    if (realtimeSocialLinks !== undefined) {
       setUserSocialLinks(realtimeSocialLinks);
     }
   }, [realtimeSocialLinks]);
@@ -215,12 +215,10 @@ const LinkForm = ({ username, bio, link, socialLinks: initialSocialLinks = [] }:
   // Link submit handler
   const onLinkSubmit = async (data: LinkFormData) => {
     try {
-      // Use real-time add function
       await addLink(data);
       console.log("Created Link:", data);
     } catch (error) {
       console.error("Something Went wrong", error);
-      toast.error("Failed to create link.");
     } finally {
       linkForm.reset();
       setIsAddingLink(false);
@@ -250,47 +248,58 @@ const LinkForm = ({ username, bio, link, socialLinks: initialSocialLinks = [] }:
   // Delete link handler
   const handleDeleteLink = async (linkId: string) => {
     try {
-      // Use real-time delete function
       await deleteLink(linkId);
       console.log("Deleted link:", linkId);
     } catch (error) {
       console.error("Error deleting link:", error);
-      toast.error("Failed to delete link.");
     }
   };
 
   // Archive link handler
   const handleArchiveLink = async (linkId: string) => {
     try {
-      const result = await archiveLink(linkId, "Archived by user");
-      if (result.success) {
-        setLinks((prev) => prev.filter((link) => link.id !== linkId));
-        toast.success("Link archived successfully!");
-      } else {
-        toast.error(result.message || "Failed to archive link.");
-      }
+      await archiveLink(linkId);
+      console.log("Archived link:", linkId);
     } catch (error) {
       console.error("Error archiving link:", error);
-      toast.error("Failed to archive link.");
     }
   };  // Edit link handler
   const handleEditLink = (linkId: string) => {
-    setEditingLinkId(linkId);
-    setIsAddingLink(true);
+    console.log("Editing link with ID:", linkId);
+    console.log("Available links:", links);
+    
+    const linkToEdit = links.find((l) => l.id === linkId);
+    console.log("Found link to edit:", linkToEdit);
+    
+    if (linkToEdit) {
+      setEditingLinkId(linkId);
+      setIsAddingLink(true);
+      
+      // Pre-populate the form with the link data
+      linkForm.reset({
+        title: linkToEdit.title,
+        url: linkToEdit.url,
+        description: linkToEdit.description || "",
+      });
+      
+      console.log("Set editing state - linkId:", linkId, "isAddingLink:", true);
+    } else {
+      console.error("Link not found for editing:", linkId);
+      toast.error("Link not found for editing");
+    }
   };
 
   const onEditLinkSubmit = async (data: LinkFormData) => {
     if (!editingLinkId) return;
     try {
-      // Use real-time update function
       await updateLink({ ...data, id: editingLinkId });
       console.log("Updated link:", data);
     } catch (error) {
       console.error("Error editing link:", error);
-      toast.error("Failed to edit link.");
     } finally {
       setIsAddingLink(false);
       setEditingLinkId(null);
+      linkForm.reset();
     }
   };
 
@@ -340,9 +349,9 @@ const LinkForm = ({ username, bio, link, socialLinks: initialSocialLinks = [] }:
       {/* Real-time Status Indicator */}
       <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
         <div className="flex items-center gap-2">
-          <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'}`} />
+          <div className="w-2 h-2 rounded-full bg-green-500" />
           <span className="text-sm text-gray-600">
-            {isConnected ? 'Real-time updates active' : 'Real-time updates unavailable (using polling)'}
+            Real-time updates active
           </span>
         </div>
       </div>
@@ -500,15 +509,12 @@ const LinkForm = ({ username, bio, link, socialLinks: initialSocialLinks = [] }:
 
       {/* Links Section */}
       <div className="space-y-3">
-        {links.map((link) => (
-          <LinkCard
-            key={link.id}
-            link={link}
-            onDelete={handleDeleteLink}
-            onEdit={handleEditLink}
-            onArchive={handleArchiveLink}
-          />
-        ))}
+        <SortableLinksList
+          links={links}
+          onEdit={handleEditLink}
+          onArchive={handleArchiveLink}
+          onDelete={handleDeleteLink}
+        />
 
         {/* Add New Link */}
         {isAddingLink ? (

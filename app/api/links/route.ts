@@ -158,9 +158,16 @@ export async function PUT(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
+    console.log('🗑️ DELETE request received');
+    console.log('Request method:', request.method);
+    console.log('Request URL:', request.url);
+    console.log('Request headers:', Object.fromEntries(request.headers.entries()));
+    
     const { userId } = await auth();
+    console.log('🔐 User ID from auth:', userId);
     
     if (!userId) {
+      console.log('❌ No user ID - unauthorized');
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
@@ -169,8 +176,10 @@ export async function DELETE(request: NextRequest) {
 
     const url = new URL(request.url);
     const linkId = url.searchParams.get('id');
+    console.log('🔗 Link ID from query:', linkId);
 
     if (!linkId) {
+      console.log('❌ No link ID provided');
       return NextResponse.json(
         { error: 'Link ID is required' },
         { status: 400 }
@@ -180,8 +189,10 @@ export async function DELETE(request: NextRequest) {
     const user = await db.user.findUnique({
       where: { clerkId: userId },
     });
+    console.log('👤 User found:', user ? `${user.id} (${user.username})` : 'null');
 
     if (!user) {
+      console.log('❌ User not found in database');
       return NextResponse.json(
         { error: 'User not found' },
         { status: 404 }
@@ -192,20 +203,31 @@ export async function DELETE(request: NextRequest) {
     const linkToDelete = await db.link.findUnique({
       where: { id: linkId, userId: user.id },
     });
+    console.log('🔍 Link to delete:', linkToDelete ? `${linkToDelete.title} (${linkToDelete.id})` : 'null');
 
     if (!linkToDelete) {
+      console.log('❌ Link not found or not owned by user');
       return NextResponse.json(
         { error: 'Link not found' },
         { status: 404 }
       );
     }
 
+    // First, delete all analytics records for this link
+    console.log('🧹 Deleting analytics records for link...');
+    const analyticsDeleteResult = await db.linkAnalytics.deleteMany({
+      where: { linkId: linkId },
+    });
+    console.log(`✅ Deleted ${analyticsDeleteResult.count} analytics records`);
+
+    // Now delete the link
     await db.link.delete({
       where: { 
         id: linkId,
         userId: user.id, // Ensure user owns this link
       },
     });
+    console.log('✅ Link deleted successfully');
 
     // Trigger real-time event
     await triggerRealtimeEvent(
@@ -230,17 +252,29 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
+    console.log('✅ DELETE operation completed successfully');
     return NextResponse.json({
       success: true,
       message: 'Link deleted successfully',
     });
   } catch (error) {
-    console.error('Error deleting link:', error);
+    console.error('❌ Error deleting link:', error);
     return NextResponse.json(
       { error: 'Failed to delete link' },
       { status: 500 }
     );
   }
+}
+
+export async function OPTIONS(request: NextRequest) {
+  return new NextResponse(null, {
+    status: 200,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization, x-forwarded-host',
+    },
+  });
 }
 
 export const dynamic = 'force-dynamic';
